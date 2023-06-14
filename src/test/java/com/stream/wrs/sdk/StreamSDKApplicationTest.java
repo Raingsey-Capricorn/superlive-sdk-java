@@ -79,7 +79,7 @@ class StreamSDKApplicationTest {
     }
 
     @Test
-    public void testGetOneHostInfoUsingMerchantAuthorizationKeyWithHostName() {
+    public void testGetOneHostInfoUsingMerchantAuthorizationKeyWithHostId() {
 
         HashMap<?, ?> result = WebClient.create(valueProvider.getSuperLiveHost())
                 .get()
