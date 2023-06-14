@@ -27,7 +27,7 @@ public class ConfigurationValueProvider {
     @Value("${superlive.configuration.merchant.endpoints.path-variable}")
     private String endpointPathVariable;
 
-    @Value("${superlive.configuration.merchant.authorizationKey}")
+    @Value("${superlive.configuration.merchant.authorization-value}")
     private String accessAuthorization;
 
     @Value("${superlive.constants.authorization-key}")
