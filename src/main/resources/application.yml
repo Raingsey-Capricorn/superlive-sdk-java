@@ -1,0 +1,17 @@
+superlive:
+  configuration:
+    merchant:
+      authorizationKey: ${AUTHORIZATION_KEY:dqkoimeT_qNak4E9Fl6DfKY_}
+      host-id: ${HOST_ID:648693da5a508510f60625fb}
+      host: http://merch.sp.tv/api/server-sdk
+      endpoints:
+        hosts: ${superlive.configuration.merchant.host}/hosts
+        counting: /count
+        path-variable: /hosts/{id}
+  constants:
+    authorization-key : Authorization
+
+webclient:
+  duration:
+    default: 30
+    failsafe: 60
