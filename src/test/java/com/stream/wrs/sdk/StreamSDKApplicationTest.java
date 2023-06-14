@@ -30,7 +30,7 @@ class StreamSDKApplicationTest {
     private ConfigurationValueProvider valueProvider;
 
     @Autowired
-    private ConfigurationValueFileProvider<LinkedMultiValueMap> fileProvider;
+    private ConfigurationValueFileProvider fileProvider;
 
     @Test
     public void testContext() {
