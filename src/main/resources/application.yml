@@ -1,3 +1,8 @@
+spring:
+  main:
+    banner-mode: off
+    log-startup-info: false
+
 superlive:
   configuration:
     merchant:
@@ -8,8 +13,10 @@ superlive:
         hosts: ${superlive.configuration.merchant.host}/hosts
         counting: /count
         path-variable: /hosts/{id}
+        participants: /participants
+
   constants:
-    authorization-key : Authorization
+    authorization-key: Authorization
 
 webclient:
   duration:

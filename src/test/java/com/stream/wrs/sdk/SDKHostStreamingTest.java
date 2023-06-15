@@ -23,8 +23,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Log
-@SpringBootTest
-class StreamSDKApplicationTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class SDKHostStreamingTest {
 
     @Autowired
     private EnvValueProvider valueProvider;
@@ -40,6 +40,7 @@ class StreamSDKApplicationTest {
                 && !valueProvider.getEndpointCounting().isEmpty()
                 && !valueProvider.getEndpointPathVariable().isEmpty();
         Assertions.assertTrue(assertion);
+
         log.info("All configuration loaded successfully");
 
     }
