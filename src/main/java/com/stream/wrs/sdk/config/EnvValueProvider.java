@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Getter
 @Component
-public class ConfigurationValueProvider {
+public class EnvValueProvider {
 
     @Value("${superlive.configuration.merchant.host}")
     private String superLiveHost;

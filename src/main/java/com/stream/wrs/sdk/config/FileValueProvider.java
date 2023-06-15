@@ -19,7 +19,7 @@ import java.util.Map;
  * Project : superlive-sdk-java
  */
 @Component
-public class ConfigurationValueFileProvider<T> {
+public class FileValueProvider<T> {
 
     /**
      * Load file and return with preferred type
@@ -56,7 +56,8 @@ public class ConfigurationValueFileProvider<T> {
                 .filter(n -> (((Map.Entry) n).getValue() instanceof List) == false)
                 .forEach(e -> {
                     Map.Entry entry = ((Map.Entry<String, ?>) e);
-                    map.replace(entry.getKey(),
+                    map.replace(
+                            entry.getKey(),
                             entry.getValue(),
                             Collections.singletonList(entry.getValue()));
                 });

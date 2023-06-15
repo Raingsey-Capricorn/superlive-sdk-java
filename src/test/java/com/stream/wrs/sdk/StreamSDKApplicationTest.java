@@ -1,7 +1,7 @@
 package com.stream.wrs.sdk;
 
-import com.stream.wrs.sdk.config.ConfigurationValueFileProvider;
-import com.stream.wrs.sdk.config.ConfigurationValueProvider;
+import com.stream.wrs.sdk.config.FileValueProvider;
+import com.stream.wrs.sdk.config.EnvValueProvider;
 import lombok.extern.java.Log;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -27,10 +27,10 @@ import java.util.Optional;
 class StreamSDKApplicationTest {
 
     @Autowired
-    private ConfigurationValueProvider valueProvider;
+    private EnvValueProvider valueProvider;
 
     @Autowired
-    private ConfigurationValueFileProvider fileProvider;
+    private FileValueProvider fileProvider;
 
     @Test
     public void testContext() {
