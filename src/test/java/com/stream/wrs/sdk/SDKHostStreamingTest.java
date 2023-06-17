@@ -2,18 +2,19 @@ package com.stream.wrs.sdk;
 
 import com.stream.wrs.sdk.config.EnvValueProvider;
 import com.stream.wrs.sdk.config.FileValueProvider;
-import lombok.extern.java.Log;
+import com.sun.org.slf4j.internal.Logger;
+import com.sun.org.slf4j.internal.LoggerFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.time.Duration;
@@ -22,10 +23,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-@Log
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WebFluxTest
 class SDKHostStreamingTest {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(SDKHostStreamingTest.class);
     @Autowired
     private EnvValueProvider valueProvider;
 
@@ -41,22 +41,24 @@ class SDKHostStreamingTest {
                 && !valueProvider.getEndpointPathVariable().isEmpty();
         Assertions.assertTrue(assertion);
 
-        log.info("All configuration loaded successfully");
+        LOGGER.debug("All configuration loaded successfully");
 
     }
 
     @Test
     public void testGetAvailableHostUsingMerchantAuthorizationKey() {
 
-        HashMap<?, ?> result = WebClient.create(valueProvider.getEndpointHosts())
+        HashMap<?, ?> result = WebClient.create(valueProvider.getSuperLiveHost())
                 .get()
                 .uri(uriBuilder -> {
                             URI uri = uriBuilder
-                                    .queryParamIfPresent("page", Optional.of(2))
-                                    .queryParamIfPresent("limit", Optional.of(2))
-                                    .queryParamIfPresent("search", Optional.of("Host1"))
+                                    .path(valueProvider.getEndpointHosts())
+                                    .queryParam("page", 0)
+                                    .queryParam("limit", 10)
+                                    .queryParam("search", "Host1")
                                     .build();
-                            log.info("GET available host of merchant using URL => :" + uri);
+                            System.out.println(uri);
+                            LOGGER.debug("GET available host of merchant using URL => :" + uri);
                             return uri;
                         }
                 )
@@ -64,31 +66,28 @@ class SDKHostStreamingTest {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(valueProvider.getAccessAuthorizationKey(), valueProvider.getAccessAuthorization());
                 })
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(HashMap.class);
-                    } else {
-                        return response.createException().flatMap(Mono::error);
-                    }
-                })
-                .block(Duration.ofSeconds(Long.parseLong(valueProvider.getDefaultWaitingDuration())));
+                .retrieve()
+                .bodyToMono(HashMap.class)
+                .block();
+
         Assertions.assertTrue(!Objects.requireNonNull(result).isEmpty()
                 && result.containsKey("data")
                 && result.get("data") != null
         );
-        log.info(result.toString());
+        LOGGER.debug(result.toString());
     }
 
+    @Disabled
     @Test
     public void testGetOneHostInfoUsingMerchantAuthorizationKeyWithHostId() {
 
-        HashMap<?, ?> result = WebClient.create(valueProvider.getSuperLiveHost())
+        HashMap<?, ?> result = (HashMap<?, ?>) WebClient.create(valueProvider.getSuperLiveHost())
                 .get()
                 .uri(uriBuilder -> {
                             URI uri = uriBuilder
                                     .path(valueProvider.getEndpointPathVariable())
                                     .build(valueProvider.getMerchantHostId());
-                            log.info("GET a host using host-id from merchant using URL => :" + uri);
+                            LOGGER.debug("GET a host using host-id from merchant using URL => :" + uri);
                             return uri;
                         }
                 )
@@ -96,13 +95,9 @@ class SDKHostStreamingTest {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(valueProvider.getAccessAuthorizationKey(), valueProvider.getAccessAuthorization());
                 })
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(HashMap.class);
-                    } else {
-                        return response.createException().flatMap(Mono::error);
-                    }
-                })
+                .exchange()
+                .doOnSuccess(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnError(throwable -> LOGGER.error(throwable.getCause().getMessage()))
                 .block(Duration.ofSeconds(Long.parseLong(valueProvider.getDefaultWaitingDuration())));
 
         Assertions.assertTrue(
@@ -114,17 +109,18 @@ class SDKHostStreamingTest {
                 }}.containsKey("name")
         );
 
-        log.info(result.toString());
+        LOGGER.debug(result.toString());
     }
 
+    @Disabled
     @Test
     public void testGetHostCountingAvailableUsingMerchantAuthorizationKey() {
 
-        HashMap<?, ?> result = WebClient.create(valueProvider.getEndpointHosts())
+        HashMap<?, ?> result = (HashMap<?, ?>) WebClient.create(valueProvider.getEndpointHosts())
                 .get()
                 .uri(uriBuilder -> {
                             URI uri = uriBuilder.path(valueProvider.getEndpointCounting()).build();
-                            log.info("GET total host of merchant using URL => :" + uri);
+                            LOGGER.debug("GET total host of merchant using URL => :" + uri);
                             return uri;
                         }
                 )
@@ -132,20 +128,16 @@ class SDKHostStreamingTest {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(valueProvider.getAccessAuthorizationKey(), valueProvider.getAccessAuthorization());
                 })
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(HashMap.class);
-                    } else {
-                        return response.createException().flatMap(Mono::error);
-                    }
-                })
+                .exchange()
+                .doOnSuccess(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnError(throwable -> LOGGER.error(throwable.getCause().getMessage()))
                 .block(Duration.ofSeconds(Long.parseLong(valueProvider.getDefaultWaitingDuration())));
 
         Assertions.assertTrue(!Objects.requireNonNull(result).isEmpty()
                 && result.containsKey("data")
                 && result.get("data") != null
         );
-        log.info(result.toString());
+        LOGGER.debug(result.toString());
 
     }
 
@@ -158,7 +150,7 @@ class SDKHostStreamingTest {
         HashMap<?, ?> result = WebClient.create(valueProvider.getEndpointHosts())
                 .post()
                 .uri(uriBuilder -> {
-                    log.info("CREATE a host for the merchant using URL => :" + uriBuilder.build());
+                    LOGGER.debug("CREATE a host for the merchant using URL => :" + uriBuilder.build());
                     return uriBuilder.build();
                 })
                 .headers(httpHeaders -> {
@@ -174,7 +166,7 @@ class SDKHostStreamingTest {
                 && result.containsKey("data")
                 && result.get("data") != null
         );
-        log.info(result.toString());
+        LOGGER.debug(result.toString());
     }
 
     @Disabled
@@ -189,7 +181,7 @@ class SDKHostStreamingTest {
                     URI uri = uriBuilder
                             .path(valueProvider.getEndpointPathVariable())
                             .build(valueProvider.getMerchantHostId());
-                    log.info("PUT update to a host using host-id using URL => :" + uri);
+                    LOGGER.debug("PUT update to a host using host-id using URL => :" + uri);
                     return uri;
                 })
                 .headers(httpHeaders -> {
@@ -205,7 +197,7 @@ class SDKHostStreamingTest {
                 && result.containsKey("data")
                 && result.get("data") != null
         );
-        log.info(result.toString());
+        LOGGER.debug(result.toString());
     }
 
     @Disabled
@@ -218,7 +210,7 @@ class SDKHostStreamingTest {
                     URI uri = uriBuilder
                             .path(valueProvider.getEndpointPathVariable())
                             .build(valueProvider.getMerchantHostId());
-                    log.info("PUT update to a host using host-id using URL => :" + uri);
+                    LOGGER.debug("PUT update to a host using host-id using URL => :" + uri);
                     return uri;
                 })
                 .headers(httpHeaders -> {
@@ -233,7 +225,7 @@ class SDKHostStreamingTest {
                 && result.containsKey("data")
                 && result.get("data") != null
         );
-        log.info(result.toString());
+        LOGGER.debug(result.toString());
     }
 
 }

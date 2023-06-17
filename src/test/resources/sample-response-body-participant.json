@@ -1,0 +1,14 @@
+{
+  "statusCode": 201,
+  "data": {
+    "name": "Raingsey",
+    "description": "Test registration",
+    "merchant": "648692b5550be3ec6f71a18a",
+    "giftPoint": 0,
+    "_id": "648ae9c299a71441959ce35b",
+    "deleted": false,
+    "createdAt": "2023-06-15T10:36:50.342Z",
+    "updatedAt": "2023-06-15T10:36:50.342Z",
+    "__v": 0
+  }
+}

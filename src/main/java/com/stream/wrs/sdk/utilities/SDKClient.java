@@ -4,9 +4,17 @@ import com.stream.wrs.sdk.config.ConfigurationProperties;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriBuilder;
+import reactor.core.publisher.Mono;
 
-import javax.annotation.PostConstruct;
+import java.net.URI;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.function.Function;
 
 /**
  * Author  : pisethraringsey.suon
@@ -15,21 +23,30 @@ import javax.annotation.PostConstruct;
  * Project : superlive-sdk-java
  */
 @Log
-@Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SDKClient extends ConfigurationProperties {
+public class SDKClient extends ConfigurationProperties implements SDKWebClientAction {
 
-    @PostConstruct
-    private void preset() {
-        merchantHostId = null;
-        accessAuthorization = null;
-        endpointCounting = "/count";
-        defaultWaitingDuration = "30";
-        defaultFailsafeDuration = "60";
-        endpointPathVariable = "/hosts/{id}";
-        accessAuthorizationKey = "Authorization";
-        superLiveHost = "http://merch.sp.tv/api/server-sdk";
-        endpointHosts = "http://merch.sp.tv/api/server-sdk/hosts";
+    private static final SDKClient INSTANCE = new SDKClient();
+
+    /**
+     * Initialize default values for the fields
+     * All these field can be customized as preference
+     *
+     * @return a singleton instance
+     */
+    public static SDKClient builder() {
+
+        INSTANCE.merchantHostId = null;
+        INSTANCE.accessAuthorization = null;
+        INSTANCE.endpointHosts = "/hosts";
+        INSTANCE.defaultWaitingDuration = "30";
+        INSTANCE.defaultFailsafeDuration = "60";
+        INSTANCE.endpointParticipants = "/participants";
+        INSTANCE.accessAuthorizationKey = "Authorization";
+        INSTANCE.endpointCounting = INSTANCE.endpointHosts + "/count";
+        INSTANCE.endpointPathVariable = INSTANCE.endpointHosts + "/{id}";
+        INSTANCE.superLiveHost = "http://merch.sp.tv/api/server-sdk";
+        return INSTANCE;
     }
 
     /**
@@ -50,7 +67,7 @@ public class SDKClient extends ConfigurationProperties {
         ) {
             return this;
         } else {
-            log.warning("Some field is not correctly configured. Checking is required!");
+            log.info("Some field is not correctly configured. Checking is required!");
             return this;
         }
     }
@@ -70,7 +87,7 @@ public class SDKClient extends ConfigurationProperties {
      * @param endpointHosts
      * @return
      */
-    public SDKClient endpointHosts(String endpointHosts) {
+    private SDKClient endpointHosts(String endpointHosts) {
         this.endpointHosts = endpointHosts;
         return this;
     }
@@ -92,6 +109,16 @@ public class SDKClient extends ConfigurationProperties {
         this.endpointPathVariable = endpointPathVariable;
         return this;
     }
+
+    /**
+     * @param endpointParticipants
+     * @return
+     */
+    private SDKClient endpointParticipants(String endpointParticipants) {
+        this.endpointParticipants = endpointParticipants;
+        return this;
+    }
+
 
     /**
      * @param accessAuthorization
@@ -144,5 +171,64 @@ public class SDKClient extends ConfigurationProperties {
         return this;
     }
 
+    @Override
+    public HashMap<?, ?> doGetRequest(SDKClient sdkClient, String requestURI) {
+        return (HashMap) WebClient.create(sdkClient.getSuperLiveHost()).get().uri((uriBuilder) -> {
+                    uriBuilder.path(requestURI);
+                    log.info("GET Requesting through url => :" + uriBuilder.build());
+                    return uriBuilder.build();
+                }).headers((httpHeaders) -> {
+                    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+                    httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
+                }).retrieve()
+                .bodyToMono(HashMap.class)
+                .block();
 
+    }
+
+    @Override
+    public HashMap<?, ?> doGetRequest(SDKClient sdkClient, Function<UriBuilder, URI> uriBuilderFunction) {
+
+        return (HashMap) WebClient.create(sdkClient.getSuperLiveHost()).get().uri((uriBuilder) -> {
+                    URI uri = uriBuilderFunction.apply(uriBuilder);
+                    log.info("GET Requesting through url => :" + uri);
+                    return uri;
+                }).headers((httpHeaders) -> {
+                    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+                    httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
+                }).retrieve()
+                .bodyToMono(HashMap.class)
+                .block();
+    }
+
+    @Override
+    public HashMap<?, ?> doPostRequest(SDKClient sdkClient,
+                                       String uri,
+                                       HashMap requestDataMap) {
+        return WebClient.create(sdkClient.getSuperLiveHost())
+                .post()
+                .uri(uriBuilder -> {
+                    uriBuilder.path(uri);
+                    log.info("POST Requesting through url => :" + uriBuilder.build());
+                    return uriBuilder.build();
+                })
+                .headers(httpHeaders -> {
+                    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+                    httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
+                })
+                .body(BodyInserters.fromFormData(SDKWebClientBuilder.buildRequestBody(requestDataMap)))
+                .retrieve()
+                .bodyToMono(HashMap.class)
+                .block(Duration.ofSeconds(Long.parseLong(sdkClient.getDefaultWaitingDuration())));
+    }
+
+    @Override
+    public HashMap<?, ?> doPutRequest(SDKClient sdkClient, URI uri) {
+        return null;
+    }
+
+    @Override
+    public HashMap<?, ?> doDeleteRequest(SDKClient sdkClient, URI uri) {
+        return null;
+    }
 }

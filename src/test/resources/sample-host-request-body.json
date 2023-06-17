@@ -1,6 +1,13 @@
 {
-  "name": "Host03",
-  "description": "Description",
-  "giftPacks": [],
-  "stickerPacks": []
+  "name": "RaingseyHost",
+  "description": "Sample Description",
+  "username": "customer_username",
+  "password": "customer_pwd_123456",
+  "giftPacks": [
+    "string"
+  ],
+  "stickerPacks": [
+    "string"
+  ],
+  "isChatEnabled": true
 }

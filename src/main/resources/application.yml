@@ -1,8 +1,3 @@
-spring:
-  main:
-    banner-mode: off
-    log-startup-info: false
-
 superlive:
   configuration:
     merchant:
@@ -10,9 +5,9 @@ superlive:
       host-id: ${HOST_ID:648693da5a508510f60625fb}
       host: ${HOST:http://merch.sp.tv/api/server-sdk}
       endpoints:
-        hosts: ${superlive.configuration.merchant.host}/hosts
-        counting: /count
-        path-variable: /hosts/{id}
+        hosts: /hosts
+        counting: ${superlive.configuration.merchant.endpoints.hosts}/count
+        path-variable: ${superlive.configuration.merchant.endpoints.hosts}/{id}
         participants: /participants
 
   constants:
