@@ -1,9 +1,11 @@
 package com.stream.wrs.sdk.utilities;
 
+import lombok.SneakyThrows;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.*;
 import java.util.function.Function;
 
@@ -109,4 +111,16 @@ public abstract class SDKWebClientBuilder {
         }};
     }
 
+    /**
+     * @param url
+     * @return
+     */
+    @SneakyThrows
+    public static HashMap<String, String> buildFQDN(String url) {
+        URL fqdn = new URL(url);
+        return new HashMap<String, String>() {{
+            put("fqdn", String.format("%s://%s%s", fqdn.getProtocol(), fqdn.getHost(), fqdn.getPort() == -1 ? "" : ":" + fqdn.getPort()));
+            put("path", String.format("%s", fqdn.getPath()));
+        }};
+    }
 }

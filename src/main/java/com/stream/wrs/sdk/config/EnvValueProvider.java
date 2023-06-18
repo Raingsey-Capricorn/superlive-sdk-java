@@ -31,7 +31,7 @@ public class EnvValueProvider extends ConfigurationProperties {
 
     @Value("${superlive.configuration.merchant.endpoints.path-variable:http://merch.sp.tv/api/server-sdk/hosts/{id}}")
     private void setEndpointPathVariable(String endpointPathVariable) {
-        this.endpointPathVariable = endpointPathVariable;
+        this.endpointHostPathVariable = endpointPathVariable;
     }
 
     @Value("${superlive.configuration.merchant.endpoints.participants:http://merch.sp.tv/api/server-sdk/participants}")

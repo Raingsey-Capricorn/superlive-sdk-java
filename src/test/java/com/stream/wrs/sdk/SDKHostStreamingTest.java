@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,7 +19,6 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 @WebFluxTest
 class SDKHostStreamingTest {
@@ -38,7 +35,7 @@ class SDKHostStreamingTest {
                 && !valueProvider.getSuperLiveHost().isEmpty()
                 && !valueProvider.getEndpointHosts().isEmpty()
                 && !valueProvider.getEndpointCounting().isEmpty()
-                && !valueProvider.getEndpointPathVariable().isEmpty();
+                && !valueProvider.getEndpointHostPathVariable().isEmpty();
         Assertions.assertTrue(assertion);
 
         LOGGER.debug("All configuration loaded successfully");
@@ -85,7 +82,7 @@ class SDKHostStreamingTest {
                 .get()
                 .uri(uriBuilder -> {
                             URI uri = uriBuilder
-                                    .path(valueProvider.getEndpointPathVariable())
+                                    .path(valueProvider.getEndpointHostPathVariable())
                                     .build(valueProvider.getMerchantHostId());
                             LOGGER.debug("GET a host using host-id from merchant using URL => :" + uri);
                             return uri;
@@ -179,7 +176,7 @@ class SDKHostStreamingTest {
                 .put()
                 .uri(uriBuilder -> {
                     URI uri = uriBuilder
-                            .path(valueProvider.getEndpointPathVariable())
+                            .path(valueProvider.getEndpointHostPathVariable())
                             .build(valueProvider.getMerchantHostId());
                     LOGGER.debug("PUT update to a host using host-id using URL => :" + uri);
                     return uri;
@@ -208,7 +205,7 @@ class SDKHostStreamingTest {
                 .delete()
                 .uri(uriBuilder -> {
                     URI uri = uriBuilder
-                            .path(valueProvider.getEndpointPathVariable())
+                            .path(valueProvider.getEndpointHostPathVariable())
                             .build(valueProvider.getMerchantHostId());
                     LOGGER.debug("PUT update to a host using host-id using URL => :" + uri);
                     return uri;

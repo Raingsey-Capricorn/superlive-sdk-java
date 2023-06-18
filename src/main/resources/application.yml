@@ -3,12 +3,25 @@ superlive:
     merchant:
       authorization-value: ${AUTHORIZATION_KEY:dqkoimeT_qNak4E9Fl6DfKY_}
       host-id: ${HOST_ID:648693da5a508510f60625fb}
-      host: ${HOST:http://merch.sp.tv/api/server-sdk}
+      host: ${HOST:http://merch.sp.tv}
+      api-path: /api/server-sdk
       endpoints:
-        hosts: /hosts
-        counting: ${superlive.configuration.merchant.endpoints.hosts}/count
-        path-variable: ${superlive.configuration.merchant.endpoints.hosts}/{id}
-        participants: /participants
+        hosts: ${superlive.configuration.merchant.api-path}/hosts
+        hosts-counting: ${superlive.configuration.merchant.endpoints.hosts}/count
+        hosts-path-id: ${superlive.configuration.merchant.endpoints.hosts}/{id}
+
+        participants: ${superlive.configuration.merchant.api-path}/participants
+        participants-path-id: ${superlive.configuration.merchant.endpoints.participants}/{id}
+
+        gifts: ${superlive.configuration.merchant.api-path}/gifts
+        gifts-path-id: ${superlive.configuration.merchant.endpoints.gifts}/{id}
+        gifts-packs: ${superlive.configuration.merchant.endpoints.gifts}/packs
+        gifts-packs-path-id: ${superlive.configuration.merchant.endpoints.gifts-packs}/{id}
+
+        stickers: ${superlive.configuration.merchant.api-path}/stickers
+        stickers-path-id: ${superlive.configuration.merchant.endpoints.stickers}/{id}
+        stickers-packs: ${superlive.configuration.merchant.endpoints.stickers}/packs
+        stickers-packs-path-id: ${superlive.configuration.merchant.endpoints.stickers-packs}/{id}
 
   constants:
     authorization-key: Authorization
@@ -17,3 +30,4 @@ webclient:
   duration:
     default: 30
     failsafe: 60
+

@@ -22,6 +22,12 @@ public interface SDKWebClientAction {
     HashMap<?, ?> doGetRequest(SDKClient sdkClient, String requestURI);
 
     /**
+     * @param requestURI
+     * @return
+     */
+    HashMap<?, ?> doGetRequest(String requestURI);
+
+    /**
      * @param sdkClient
      * @param uriBuilderFunction
      * @return
@@ -35,6 +41,14 @@ public interface SDKWebClientAction {
      */
     HashMap<?, ?> doPostRequest(final SDKClient sdkClient,
                                 final String baseURL,
+                                final HashMap requestDataMap);
+
+    /**
+     * @param requestURI
+     * @param requestDataMap
+     * @return
+     */
+    HashMap<?, ?> doPostRequest(String requestURI,
                                 final HashMap requestDataMap);
 
     /**
