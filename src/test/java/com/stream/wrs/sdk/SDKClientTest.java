@@ -8,8 +8,8 @@ import lombok.extern.java.Log;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.http.HttpStatus;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
@@ -18,97 +18,6 @@ import java.util.Optional;
 @Log
 @WebFluxTest
 class SDKClientTest {
-
-    @SneakyThrows
-    @Test
-    public void testDomainExtractor() {
-
-        URI uri = new URI("http://192.168.31.143:5000/api/server-sdk/");
-        String host = uri.getHost();
-
-        System.out.println(SDKWebClientBuilder.buildFQDN("http://192.168.31.143:5000/api/server-sdk/"));
-
-    }
-
-    /**
-     *
-     */
-    @SneakyThrows
-    @Test
-    public void testCountingHostUsingSDKClientSimple() {
-
-        /*
-        HashMap<?, ?> result = SDKClient.builder()
-                .superLiveHost("http://192.168.31.143:5000/api/server-sdk/")
-                .merchantHostId("648a77d088c133b4c4b96f8a")
-                .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
-                .build()
-                .doGetRequest(SDKClient.builder().getEndpointCounting());
-        */
-
-        /* or as API's url */
-        HashMap<?, ?> result = SDKClient.builder()
-                .merchantHostId("648a77d088c133b4c4b96f8a")
-                .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
-                .build()
-                .doGetRequest("http://192.168.31.143:5000/api/server-sdk/hosts/count");
-
-        Assertions.assertTrue(!Objects.requireNonNull(result).isEmpty()
-                && result.containsKey("data")
-                && result.get("data") != null
-        );
-        log.info(new JsonMapper().writeValueAsString(result));
-    }
-
-    @SneakyThrows
-    @Test
-    public void testGettingAllHostUsingSDKClientSimpleWithQueryParams() {
-        SDKClient client = SDKClient.builder()
-                .superLiveHost("http://192.168.31.143:5000/api/server-sdk/")
-                .merchantHostId("648a77d088c133b4c4b96f8a")
-                .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
-                .build();
-        HashMap<?, ?> result = client
-                .doGetRequest(
-                        client,
-                        SDKWebClientBuilder.buildURI(
-                                Optional.of(client.getEndpointHosts()),
-                                new HashMap() {{
-                                    put("page", "1");
-                                    put("limit", "10");
-                                    put("search", "");
-                                }})
-                );
-
-        Assertions.assertTrue(!Objects.requireNonNull(result).isEmpty()
-                && result.containsKey("data")
-                && result.get("data") != null
-        );
-        log.info(new JsonMapper().writeValueAsString(result));
-    }
-
-    @SneakyThrows
-    @Test
-    public void testGetAHostUsingSDKClientWithPathVariableHostId() {
-        SDKClient client = SDKClient.builder()
-                .superLiveHost("http://192.168.31.143:5000/api/server-sdk/")
-                .merchantHostId("648a77d088c133b4c4b96f8a")
-                .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
-                .build();
-        HashMap<?, ?> result = client
-                .doGetRequest(
-                        client,
-                        SDKWebClientBuilder.buildURI(Optional.of(
-                                        client.getEndpointHostPathVariable()),
-                                "648693da5a508510f60625fb")
-                );
-
-        Assertions.assertTrue(!Objects.requireNonNull(result).isEmpty()
-                && result.containsKey("data")
-                && result.get("data") != null
-        );
-        log.info(new JsonMapper().writeValueAsString(result));
-    }
 
     @SneakyThrows
     @Test
@@ -133,14 +42,13 @@ class SDKClientTest {
         log.info(new JsonMapper().writeValueAsString(result));
     }
 
-    /**
-     *
-     */
     @SneakyThrows
     @Test
     public void testCreatingParticipant() {
 
-        /*SDKClient client = SDKClient.builder()
+        /*
+        Old version - still working
+        SDKClient client = SDKClient.builder()
                 .superLiveHost("http://192.168.31.143:5000/api/server-sdk/")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build();
@@ -154,7 +62,7 @@ class SDKClientTest {
                             put("description", Collections.singletonList("Description - viewer0033333"));
                         }}
                 );
-*/
+        */
 
         HashMap<?, ?> result = SDKClient.builder()
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
@@ -169,5 +77,64 @@ class SDKClientTest {
                 && result.get("data") != null
         );
         log.info(new JsonMapper().writeValueAsString(result));
+    }
+
+    @SneakyThrows
+    @Test
+    public void testPutSomeUpdateToTheParticipants() {
+
+        HashMap<?, ?> result = SDKClient.builder()
+                .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
+                .build()
+                .doPutRequest("http://192.168.31.143:5000/api/server-sdk/participants/{id}",
+                        "648ea7279489fd81bef64d59",
+                        new HashMap() {{
+                            put("name", Collections.singletonList("viewe?????????????"));
+                            put("description", Collections.singletonList("Description - viewe?????????????"));
+                        }});
+
+        String jsonResult = new JsonMapper().writeValueAsString(result);
+        Assertions.assertTrue(!Objects.requireNonNull(result).isEmpty()
+                && result.containsKey("data")
+                && result.get("data") != null
+                && result.containsKey("statusCode")
+                && result.get("statusCode")
+                .equals(HttpStatus.OK)
+        );
+        log.info(jsonResult);
+    }
+
+    @SneakyThrows
+    @Test
+    public void testDeleteAHostUsingHostIdMerchantAuthorizationKey() {
+
+        HashMap<?, ?> result = SDKClient.builder()
+                .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
+                .build()
+                .doPutRequest("http://192.168.31.143:5000/api/server-sdk/participants/{id}",
+                        "648ea7279489fd81bef64d59",
+                        new HashMap() {{
+                            put("name", Collections.singletonList("viewe?????????????"));
+                            put("description", Collections.singletonList("Description - viewe?????????????"));
+                        }});
+
+        String jsonResult = new JsonMapper().writeValueAsString(result);
+        Assertions.assertTrue(!Objects.requireNonNull(result).isEmpty()
+                && result.containsKey("data")
+                && result.get("data") != null
+                && result.containsKey("statusCode")
+                && result.get("statusCode")
+                .equals(HttpStatus.OK)
+        );
+        log.info(jsonResult);
+    }
+
+    /**
+     * OK now,
+     */
+    @SneakyThrows
+    @Test
+    public void testGetHostCount() {
+
     }
 }

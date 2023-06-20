@@ -16,6 +16,8 @@ import java.util.function.Function;
  * Project : superlive-sdk-java
  */
 public abstract class SDKWebClientBuilder {
+    public static final Integer FQDN = 1;
+    public static final Integer PATH = 2;
 
     /**
      * @param url
@@ -64,7 +66,6 @@ public abstract class SDKWebClientBuilder {
                     .forEach(e -> uriBuilder.queryParam(e.getKey(), Optional.of(e.getValue()).get()));
             return uriBuilder.build();
         };
-
     }
 
     /**
@@ -116,11 +117,11 @@ public abstract class SDKWebClientBuilder {
      * @return
      */
     @SneakyThrows
-    public static HashMap<String, String> buildFQDN(String url) {
+    public static HashMap<Integer, String> buildFQDN(String url) {
         URL fqdn = new URL(url);
-        return new HashMap<String, String>() {{
-            put("fqdn", String.format("%s://%s%s", fqdn.getProtocol(), fqdn.getHost(), fqdn.getPort() == -1 ? "" : ":" + fqdn.getPort()));
-            put("path", String.format("%s", fqdn.getPath()));
+        return new HashMap<Integer, String>() {{
+            put(FQDN, String.format("%s://%s%s", fqdn.getProtocol(), fqdn.getHost(), fqdn.getPort() == -1 ? "" : ":" + fqdn.getPort()));
+            put(PATH, String.format("%s", fqdn.getPath()));
         }};
     }
 }

@@ -15,7 +15,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URI;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -95,7 +94,7 @@ class SDKHostStreamingTest {
                 .exchange()
                 .doOnSuccess(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .doOnError(throwable -> LOGGER.error(throwable.getCause().getMessage()))
-                .block(Duration.ofSeconds(Long.parseLong(valueProvider.getDefaultWaitingDuration())));
+                .block();
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(result).isEmpty()
@@ -128,7 +127,7 @@ class SDKHostStreamingTest {
                 .exchange()
                 .doOnSuccess(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .doOnError(throwable -> LOGGER.error(throwable.getCause().getMessage()))
-                .block(Duration.ofSeconds(Long.parseLong(valueProvider.getDefaultWaitingDuration())));
+                .block();
 
         Assertions.assertTrue(!Objects.requireNonNull(result).isEmpty()
                 && result.containsKey("data")
@@ -157,7 +156,7 @@ class SDKHostStreamingTest {
                 .body(BodyInserters.fromFormData(valueMap))
                 .retrieve()
                 .bodyToMono(HashMap.class)
-                .block(Duration.ofSeconds(Long.parseLong(valueProvider.getDefaultWaitingDuration())));
+                .block();
 
         Assertions.assertTrue(!Objects.requireNonNull(result).isEmpty()
                 && result.containsKey("data")
@@ -188,7 +187,7 @@ class SDKHostStreamingTest {
                 .body(BodyInserters.fromFormData(valueMap))
                 .retrieve()
                 .bodyToMono(HashMap.class)
-                .block(Duration.ofSeconds(Long.parseLong(valueProvider.getDefaultWaitingDuration())));
+                .block();
 
         Assertions.assertTrue(!Objects.requireNonNull(result).isEmpty()
                 && result.containsKey("data")
@@ -216,7 +215,7 @@ class SDKHostStreamingTest {
                 })
                 .retrieve()
                 .bodyToMono(HashMap.class)
-                .block(Duration.ofSeconds(Long.parseLong(valueProvider.getDefaultWaitingDuration())));
+                .block();
 
         Assertions.assertTrue(!Objects.requireNonNull(result).isEmpty()
                 && result.containsKey("data")
