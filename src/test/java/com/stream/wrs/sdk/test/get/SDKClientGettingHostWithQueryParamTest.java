@@ -19,6 +19,7 @@ import java.util.Optional;
  * Email   : pisethraingsey@dr-tech.com
  * Date    : 20/6/23
  * Project : superlive-sdk-java
+ * This Test case is to ensure consistency between version of the SDKClient API
  */
 @Log
 public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {

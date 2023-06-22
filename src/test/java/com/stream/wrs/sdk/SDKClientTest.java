@@ -86,7 +86,7 @@ class SDKClientTest {
         HashMap<?, ?> result = SDKClient.builder()
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build()
-                .doPutRequest("http://192.168.31.143:5000/api/server-sdk/participants/{id}",
+                    .doPutRequest("http://192.168.31.143:5000/api/server-sdk/participants/{id}",
                         "648ea7279489fd81bef64d59",
                         new HashMap() {{
                             put("name", Collections.singletonList("viewe?????????????"));

@@ -2,6 +2,7 @@ package com.stream.wrs.sdk.utilities;
 
 import lombok.SneakyThrows;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;
@@ -87,12 +88,10 @@ public abstract class SDKWebClientBuilder {
 
 
     /**
-     * //TODO : update ot dynamic value later on !
-     *
      * @param dataMap : simple single level formList
      * @return LinkedMultiValueMap<String, Class < ? extends Object>>
      */
-    public static LinkedMultiValueMap<String, String> buildRequestBody(HashMap dataMap) {
+    public static MultiValueMap buildRequestBody(HashMap dataMap) {
 
         dataMap.entrySet()
                 .stream()
@@ -107,7 +106,7 @@ public abstract class SDKWebClientBuilder {
         /**
          * Return preferred request body for processing
          */
-        return new LinkedMultiValueMap<String, String>() {{
+        return new LinkedMultiValueMap() {{
             putAll(dataMap);
         }};
     }
@@ -124,4 +123,7 @@ public abstract class SDKWebClientBuilder {
             put(PATH, String.format("%s", fqdn.getPath()));
         }};
     }
+
+
+
 }

@@ -1,6 +1,7 @@
 package com.stream.wrs.sdk.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stream.wrs.sdk.model.request.HostRequestBody;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -36,7 +37,12 @@ public class FileValueProvider<T> {
      * @see org.springframework.http.HttpMethod#POST
      * @see org.springframework.http.HttpMethod#PUT
      * @see org.springframework.http.HttpMethod#PATCH
+     * This method is supposed to be using with formData with MultiValueMap<String,String> which is not
+     * practical in various usage
+     * To be repalced with
+     * @see FileValueProvider#readJsonRequestBodyAsMultiPartData(String)
      */
+    @Deprecated
     @SneakyThrows
     public LinkedMultiValueMap<String, Class<? extends Object>> readJsonRequestBody(final String fileName) {
 
@@ -49,7 +55,8 @@ public class FileValueProvider<T> {
         );
 
         /**
-         * Convert non-list value for certain key to singletonList
+         * @deprecated
+         * Convert non-list value for certain key to singletonList,
          */
         map.entrySet()
                 .stream()
@@ -69,4 +76,64 @@ public class FileValueProvider<T> {
         }};
     }
 
+    /**
+     * Load file and return with preferred type
+     * Due to Java Map key-value type restriction,
+     * -- every data type of value which is non-list type
+     * -- will be cast to Collections.singletonList
+     * -- so that the data can be sent using POST,PUT, and PATCH
+     * -- using BodyInserters#fromFormData(MultiValueMap)
+     *
+     * @param fileName : full path file from either main resources or test resources
+     * @return LinkedMultiValueMap<String, Class < ? extends Object>>
+     * @see Collections#singletonList(Object)
+     * @see org.springframework.web.reactive.function.BodyInserters#fromFormData(MultiValueMap)
+     * @see org.springframework.http.HttpMethod#POST
+     * @see org.springframework.http.HttpMethod#PUT
+     * @see org.springframework.http.HttpMethod#PATCH
+     */
+    @SneakyThrows
+    public HostRequestBody readJsonRequestBodyAsRequestBody(final String fileName) {
+
+        HashMap map = new ObjectMapper().readValue(
+                Paths.get(fileName).toFile(),
+                HashMap.class
+        );
+        HostRequestBody body = new HostRequestBody();
+        body.setName(map.get("name").toString());
+        body.setDescription(map.get("description").toString());
+        body.setUsername(map.get("username").toString());
+        body.setPassword(map.get("password").toString());
+        body.setGiftPacks((List<String>) map.get("giftPacks"));
+        body.setStickerPacks((List<String>) map.get("stickerPacks"));
+        body.setChatEnabled((Boolean) map.get("isChatEnabled"));
+        return body;
+    }
+
+
+    /**
+     * Load file and return with preferred type
+     * Due to Java Map key-value type restriction,
+     * -- every data type of value which is non-list type
+     * -- will be cast to Collections.singletonList
+     * -- so that the data can be sent using POST,PUT, and PATCH
+     * -- using BodyInserters#fromFormData(MultiValueMap)
+     *
+     * @param fileName : full path file from either main resources or test resources
+     * @return LinkedMultiValueMap<String, Class < ? extends Object>>
+     * @see Collections#singletonList(Object)
+     * @see org.springframework.web.reactive.function.BodyInserters#fromFormData(MultiValueMap)
+     * @see org.springframework.http.HttpMethod#POST
+     * @see org.springframework.http.HttpMethod#PUT
+     * @see org.springframework.http.HttpMethod#PATCH
+     */
+    @SneakyThrows
+    public HashMap readJsonRequestBodyAsMultiPartData(final String fileName) {
+
+        return new ObjectMapper().readValue(
+                Paths.get(fileName).toFile(),
+                HashMap.class
+        );
+
+    }
 }

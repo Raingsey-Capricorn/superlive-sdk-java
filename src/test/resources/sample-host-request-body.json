@@ -1,13 +1,9 @@
 {
-  "name": "RaingseyHost",
-  "description": "Sample Description",
-  "username": "customer_username",
-  "password": "customer_pwd_123456",
-  "giftPacks": [
-    "string"
-  ],
-  "stickerPacks": [
-    "string"
-  ],
+  "name": "SampleHost000002",
+  "description": "Test host description",
+  "username": "Ting Tinesdsds",
+  "password": "123456",
+  "giftPacks": ["648c2ea29dc14af3b179dc38"],
+  "stickerPacks": ["64926ab9e969a07a83abfb93"],
   "isChatEnabled": true
 }

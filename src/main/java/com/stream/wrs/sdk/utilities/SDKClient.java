@@ -3,8 +3,10 @@ package com.stream.wrs.sdk.utilities;
 import com.stream.wrs.sdk.config.ConfigurationProperties;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
@@ -13,6 +15,7 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 /**
@@ -67,7 +70,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
                 INSTANCE.endpointHostPathVariable != null && !INSTANCE.endpointHostPathVariable.isEmpty() &&
                 INSTANCE.accessAuthorization != null && !INSTANCE.accessAuthorization.isEmpty() &&
                 INSTANCE.accessAuthorizationKey != null && !INSTANCE.accessAuthorizationKey.isEmpty() &&
-                INSTANCE.merchantHostId != null && !INSTANCE.merchantHostId.isEmpty() &&
+                /*INSTANCE.merchantHostId != null && !INSTANCE.merchantHostId.isEmpty() &&*/
                 INSTANCE.defaultWaitingDuration != null && !INSTANCE.defaultWaitingDuration.isEmpty() &&
                 INSTANCE.defaultFailsafeDuration != null && !INSTANCE.defaultFailsafeDuration.isEmpty()
         ) {
@@ -284,7 +287,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
                     httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
                 }).retrieve()
                 .bodyToMono(HashMap.class)
-                .block();
+                .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     /**
@@ -309,6 +312,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
      * @return
      */
     @Override
+    @SneakyThrows
     public HashMap<?, ?> doPostRequest(SDKClient sdkClient,
                                        String uri,
                                        HashMap requestDataMap) {
@@ -323,13 +327,17 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
                 })
-                .body(BodyInserters.fromFormData(SDKWebClientBuilder.buildRequestBody(requestDataMap)))
-                .retrieve()
-                .bodyToMono(HashMap.class)
-                .block(Duration.ofSeconds(Long.parseLong(sdkClient.getDefaultWaitingDuration())));
+                .body(BodyInserters.fromObject(requestDataMap))
+                .exchange()
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(clientResponse -> log.log(Level.INFO, String.valueOf(clientResponse.statusCode().is2xxSuccessful())))
+                .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     /**
+     * TODO NOT WORKING CORRECTLY YET
+     *
      * @param uri
      * @param requestDataMap
      * @return
@@ -349,7 +357,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(this.getAccessAuthorizationKey(), this.getAccessAuthorization());
                 })
-                .body(BodyInserters.fromFormData(SDKWebClientBuilder.buildRequestBody(requestDataMap)))
+                .body(BodyInserters.fromObject(SDKWebClientBuilder.buildRequestBody(requestDataMap)))
                 .retrieve()
                 .bodyToMono(HashMap.class)
                 .block();
@@ -389,7 +397,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(this.getAccessAuthorizationKey(), this.getAccessAuthorization());
                 })
-                .body(BodyInserters.fromFormData(SDKWebClientBuilder.buildRequestBody(requestDataMap)))
+                .body(BodyInserters.fromObject(SDKWebClientBuilder.buildRequestBody(requestDataMap)))
                 .retrieve()
                 .bodyToMono(HashMap.class)
                 .block();
@@ -446,7 +454,9 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
         } else if (isSticker) {
             return getUri(superLiveHost, String.format("%s/%s", ApiPath.STICKER.pathName, uri));
         } else {
-            if (Pattern.compile("((http|https)://)(www.)?[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)").matcher(uri).matches()) {
+            if (Pattern.compile("((http|https)://)(www.)?[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)")
+                    .matcher(uri)
+                    .matches()) {
                 return getUri(SDKWebClientBuilder.buildFQDN(uri));
             } else {
                 return getUri(superLiveHost, uri);
