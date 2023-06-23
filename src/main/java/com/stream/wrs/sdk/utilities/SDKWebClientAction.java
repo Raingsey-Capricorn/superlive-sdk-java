@@ -90,9 +90,11 @@ public interface SDKWebClientAction {
     /**
      * @param sdkClient
      * @param requestURI
+     * @param id
+     * @param requestDataMap
      * @return
      */
-    HashMap<?, ?> doPutRequest(SDKClient sdkClient, URI requestURI);
+    HashMap<?, ?> doPutRequest(SDKClient sdkClient, String requestURI, String id, HashMap requestDataMap);
 
     /**
      * @param requestURI

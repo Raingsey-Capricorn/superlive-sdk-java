@@ -218,6 +218,39 @@ public abstract class SDKWebClientBuilder {
         });
     }
 
+
+    private static WebClient.RequestBodySpec buildHttpPutURI(
+            final String id,
+            final HashMap<Integer, String> fqdn) {
+
+        return WebClient.create(fqdn.get(SDKWebClientBuilder.FQDN))
+                .put()
+                .uri(uriBuilder -> {
+                    URI uri = uriBuilder
+                            .path(fqdn.get(SDKWebClientBuilder.PATH))
+                            .build(id);
+                    log.info("PUT Requesting through url => :" + uri);
+                    return uri;
+                });
+    }
+
+    private static WebClient.RequestBodySpec buildHttpPutURI(
+            final String superliveHost,
+            final String id,
+            final String path) {
+
+        return WebClient.create(superliveHost)
+                .put()
+                .uri(uriBuilder -> {
+                    URI uri = uriBuilder
+                            .path(path)
+                            .build(id);
+                    log.info("PUT Requesting through url => :" + uri);
+                    return uri;
+                });
+    }
+
+
     /**
      * @param uri
      * @param uriBuilderFunction
@@ -258,7 +291,6 @@ public abstract class SDKWebClientBuilder {
         }
     }
 
-
     /**
      * @param uri
      * @param booleanList
@@ -291,6 +323,37 @@ public abstract class SDKWebClientBuilder {
 
             } else {
                 return buildHttpPostURI(superLiveHost, uri);
+            }
+        }
+    }
+
+    public static WebClient.RequestBodySpec buildAPIPathForHttpPut(
+            final String uri,
+            final String id,
+            final List<Boolean> booleanList,
+            final String superLiveHost) {
+
+        if (booleanList.get(0)) {
+            return buildHttpPutURI(superLiveHost, id,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.HOST.pathName, uri));
+        } else if (booleanList.get(1)) {
+            return buildHttpPutURI(superLiveHost, id,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.PARTICIPANT.pathName, uri));
+        } else if (booleanList.get(2)) {
+            return buildHttpPutURI(superLiveHost, id,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.GIFT.pathName, uri));
+        } else if (booleanList.get(3)) {
+            return buildHttpPutURI(superLiveHost, id,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.STICKER.pathName, uri));
+        } else {
+            if (Pattern.compile("((http|https)://)(www.)?[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)")
+                    .matcher(uri)
+                    .matches()) {
+
+                return buildHttpPutURI(id, SDKWebClientBuilder.buildFQDN(uri));
+
+            } else {
+                return buildHttpPutURI(superLiveHost, id, uri);
             }
         }
     }

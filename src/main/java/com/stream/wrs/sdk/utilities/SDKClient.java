@@ -339,35 +339,45 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
     }
 
     @Override
-    public HashMap<?, ?> doPutRequest(SDKClient sdkClient, URI uri) {
+    public HashMap<?, ?> doPutRequest(SDKClient sdkClient, String requestURI, String id, HashMap requestDataMap) {
 
-        log.warning("execution is being constructed.... ");
-        return null;
-    }
-
-    @Override
-    public HashMap<?, ?> doPutRequest(String requestURI, String id, HashMap requestDataMap) {
-        HashMap<Integer, String> fqdn = SDKWebClientBuilder.buildFQDN(requestURI);
-        return WebClient.create(fqdn.get(SDKWebClientBuilder.FQDN))
+        return WebClient.create(sdkClient.getSuperLiveHost())
                 .put()
                 .uri(uriBuilder -> {
                     URI uri = uriBuilder
-                            .path(fqdn.get(SDKWebClientBuilder.PATH))
+                            .path(requestURI)
                             .build(id);
                     log.info("PUT Requesting through url => :" + uri);
                     return uri;
                 })
                 .headers(httpHeaders -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-                    httpHeaders.add(this.getAccessAuthorizationKey(), this.getAccessAuthorization());
+                    httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
                 })
-                .body(BodyInserters.fromObject(SDKWebClientBuilder.buildRequestBody(requestDataMap)))
+                .body(BodyInserters.fromObject(requestDataMap))
                 .exchange()
                 .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
                 .doOnSuccess(clientResponse -> log.log(Level.INFO, String.valueOf(clientResponse.statusCode().is2xxSuccessful())))
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
+
+    @Override
+    public HashMap<?, ?> doPutRequest(String requestURI, String id, HashMap requestDataMap) {
+
+        return SDKWebClientBuilder.buildAPIPathForHttpPut(requestURI, id, getAPIsPaths(), superLiveHost)
+                .headers(httpHeaders -> {
+                    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+                    httpHeaders.add(this.getAccessAuthorizationKey(), this.getAccessAuthorization());
+                })
+                .body(BodyInserters.fromObject(requestDataMap))
+                .exchange()
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(clientResponse -> log.log(Level.INFO, String.valueOf(clientResponse.statusCode().is2xxSuccessful())))
+                .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
+    }
+
 
     @Override
     public HashMap<?, ?> doDeleteRequest(SDKClient sdkClient, URI uri) {
