@@ -1,14 +1,19 @@
 package com.stream.wrs.sdk.utilities;
 
+import com.stream.wrs.sdk.config.ConfigurationProperties;
 import lombok.SneakyThrows;
+import lombok.extern.java.Log;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * Author  : pisethraringsey.suon
@@ -16,6 +21,7 @@ import java.util.function.Function;
  * Date    : 16/6/23
  * Project : superlive-sdk-java
  */
+@Log
 public abstract class SDKWebClientBuilder {
     public static final Integer FQDN = 1;
     public static final Integer PATH = 2;
@@ -40,7 +46,7 @@ public abstract class SDKWebClientBuilder {
      * @see SDKClient#getEndpointHosts()
      * @see SDKClient#getEndpointParticipants()
      */
-    public static Function<UriBuilder, URI> buildURI(String simpleURI) {
+    public static Function<UriBuilder, URI> buildHttpGetURI(String simpleURI) {
         return uriBuilder ->
                 uriBuilder.path(simpleURI).build();
     }
@@ -56,7 +62,7 @@ public abstract class SDKWebClientBuilder {
      * @see <a href="http://merch.sp.tv/api/server-sdk-docs#/hosts/ServerSDKHostController_findAll">(page, limit & search)</a>
      * @see UriBuilder#queryParam(String, Object...)
      */
-    public static Function<UriBuilder, URI> buildURI(Optional<String> uri, HashMap<String, ?> optionalQueryParams) {
+    public static Function<UriBuilder, URI> buildHttpGetURI(Optional<String> uri, HashMap<String, ?> optionalQueryParams) {
         return uriBuilder -> {
             if (uri.isPresent() && !uri.get().isEmpty())
                 uriBuilder.path(uri.get());
@@ -78,7 +84,7 @@ public abstract class SDKWebClientBuilder {
      * @param pathVariableId : Required and valid id to support the path's of the URI
      * @return
      */
-    public static Function<UriBuilder, URI> buildURI(Optional<String> uri, Object pathVariableId) {
+    public static Function<UriBuilder, URI> buildHttpGetURI(Optional<String> uri, Object pathVariableId) {
         return uriBuilder -> {
             if (uri.isPresent() && !uri.get().isEmpty())
                 uriBuilder.path(uri.get());
@@ -124,6 +130,170 @@ public abstract class SDKWebClientBuilder {
         }};
     }
 
+    /**
+     * @param fqdn
+     * @param uriBuilderFunction
+     * @return
+     */
+    private static WebClient.RequestHeadersSpec<?> buildHttpGetURI(
+            final HashMap<Integer, String> fqdn,
+            final Function<UriBuilder, URI> uriBuilderFunction) {
+
+        return WebClient.create(fqdn.get(SDKWebClientBuilder.FQDN)).get().uri((uriBuilder) -> {
+            if (uriBuilderFunction == null) {
+                uriBuilder.path(fqdn.get(SDKWebClientBuilder.PATH));
+                log.info("GET Requesting through url => :" + uriBuilder.build());
+                return uriBuilder.build();
+            } else {
+                uriBuilder.path(fqdn.get(SDKWebClientBuilder.PATH));
+                URI uri = uriBuilderFunction.apply(uriBuilder);
+                log.info("GET Requesting through url => :" + uri);
+                return uri;
+            }
+        });
+    }
+
+    /**
+     * @param fqdn
+     * @param path
+     * @return
+     */
+    private static WebClient.RequestHeadersSpec<?> buildHttpGetURI(
+            final String fqdn,
+            final String path,
+            final Function<UriBuilder, URI> uriBuilderFunction) {
+
+        return WebClient.create(fqdn).get().uri((uriBuilder) -> {
+            if (uriBuilderFunction == null) {
+                uriBuilder.path(path);
+                log.info("GET Requesting through url => :" + uriBuilder.build());
+                return uriBuilder.build();
+            } else {
+                uriBuilder.path(path);
+                URI uri = uriBuilderFunction.apply(uriBuilder);
+                log.info("GET Requesting through url => :" + uri);
+                return uri;
+            }
+        });
+    }
+
+    /**
+     * @param fqdn
+     * @param path
+     * @return
+     */
+    private static WebClient.RequestBodySpec buildHttpPostURI(
+            final String fqdn,
+            final String path) {
+
+        return WebClient.create(fqdn)
+                .post()
+                .uri((uriBuilder) -> {
+                    uriBuilder.path(path);
+                    log.info("POST Requesting through url => :" + uriBuilder.build());
+                    return uriBuilder.build();
+                });
+    }
+
+    private static ExchangeFilterFunction requestLogger() {
+        return (clientRequest, next) -> {
+            clientRequest.headers().forEach((name, values) -> log.info(String.format("%s : %s", name, values)));
+            log.info(String.format("Request URL : %s", clientRequest.url()));
+            return next.exchange(clientRequest);
+        };
+    }
+
+
+    /**
+     * @param fqdn
+     * @return
+     */
+    private static WebClient.RequestBodySpec buildHttpPostURI(
+            final HashMap<Integer, String> fqdn) {
+
+        return WebClient.create(fqdn.get(SDKWebClientBuilder.FQDN)).post().uri((uriBuilder) -> {
+            uriBuilder.path(fqdn.get(SDKWebClientBuilder.PATH));
+            log.info("GET Requesting through url => :" + uriBuilder.build());
+            return uriBuilder.build();
+        });
+    }
+
+    /**
+     * @param uri
+     * @param uriBuilderFunction
+     * @param booleanList
+     * @param superLiveHost
+     * @return
+     */
+    public static WebClient.RequestHeadersSpec<?> buildAPIPathForHttpGet(
+            final String uri,
+            final Function<UriBuilder, URI> uriBuilderFunction,
+            final List<Boolean> booleanList,
+            final String superLiveHost) {
+
+        if (booleanList.get(0)) {
+            return buildHttpGetURI(superLiveHost,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.HOST.pathName, uri),
+                    uriBuilderFunction);
+        } else if (booleanList.get(1)) {
+            return buildHttpGetURI(superLiveHost,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.PARTICIPANT.pathName, uri),
+                    uriBuilderFunction);
+        } else if (booleanList.get(2)) {
+            return buildHttpGetURI(superLiveHost,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.GIFT.pathName, uri),
+                    uriBuilderFunction);
+        } else if (booleanList.get(3)) {
+            return buildHttpGetURI(superLiveHost,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.STICKER.pathName, uri),
+                    uriBuilderFunction);
+        } else {
+            if (Pattern.compile("((http|https)://)(www.)?[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)")
+                    .matcher(uri)
+                    .matches()) {
+                return buildHttpGetURI(SDKWebClientBuilder.buildFQDN(uri), uriBuilderFunction);
+            } else {
+                return buildHttpGetURI(superLiveHost, uri, uriBuilderFunction);
+            }
+        }
+    }
+
+
+    /**
+     * @param uri
+     * @param booleanList
+     * @param superLiveHost
+     * @return
+     */
+    public static WebClient.RequestBodySpec buildAPIPathForHttpPost(
+            final String uri,
+            final List<Boolean> booleanList,
+            final String superLiveHost) {
+
+        if (booleanList.get(0)) {
+            return buildHttpPostURI(superLiveHost,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.HOST.pathName, uri));
+        } else if (booleanList.get(1)) {
+            return buildHttpPostURI(superLiveHost,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.PARTICIPANT.pathName, uri));
+        } else if (booleanList.get(2)) {
+            return buildHttpPostURI(superLiveHost,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.GIFT.pathName, uri));
+        } else if (booleanList.get(3)) {
+            return buildHttpPostURI(superLiveHost,
+                    String.format("%s/%s", ConfigurationProperties.ApiPath.STICKER.pathName, uri));
+        } else {
+            if (Pattern.compile("((http|https)://)(www.)?[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)")
+                    .matcher(uri)
+                    .matches()) {
+
+                return buildHttpPostURI(SDKWebClientBuilder.buildFQDN(uri));
+
+            } else {
+                return buildHttpPostURI(superLiveHost, uri);
+            }
+        }
+    }
 
 
 }

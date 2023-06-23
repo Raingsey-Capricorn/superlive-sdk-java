@@ -1,8 +1,10 @@
 package com.stream.wrs.sdk.config;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Author  : pisethraringsey.suon
@@ -13,16 +15,7 @@ import lombok.Setter;
 @Getter
 public abstract class ConfigurationProperties {
 
-    private String apiUri = "/api/server-sdk";
-
-    /**
-     * @param apiUri
-     * @return
-     */
-    public String setApiUri(String apiUri) {
-        this.apiUri = apiUri;
-        return apiUri;
-    }
+    private final String apiUri = "/api/server-sdk";
 
     public static enum ApiPath {
         HOST("/hosts"),
@@ -61,4 +54,7 @@ public abstract class ConfigurationProperties {
     @Setter
     protected boolean isGift;
 
+    public List<Boolean> getAPIsPaths() {
+        return Arrays.asList(isHost, isParticipants, isGift, isSticker);
+    }
 }

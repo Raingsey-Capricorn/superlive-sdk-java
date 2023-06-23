@@ -14,25 +14,26 @@ import java.util.function.Function;
  */
 public interface SDKWebClientAction {
 
-    /**
-     * @param sdkClient
-     * @param requestURI
-     * @return
-     */
-    HashMap<?, ?> doGetRequest(SDKClient sdkClient, String requestURI);
 
     /**
-     * @param requestURI
-     * @return
+     * This method is strickly
+     * used with SDKClient.builder()
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * <br/><br/><strong>Usage</strong>:
+     * <code>
+     * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doGetRequest(String requestURI)
+     * <br/>
+     * <br/>- SDKClient<br/>.builder()<br/>.buildXXXXXAPI()...<br/>.doGetRequest(String requestURI)
+     * </code>
+     * <br/>
+     *
+     * @param requestURI : the
+     * @return HashMap<?, ?> content result content as Json :
      */
     HashMap<?, ?> doGetRequest(String requestURI);
-
-    /**
-     * @param sdkClient
-     * @param uriBuilderFunction
-     * @return
-     */
-    HashMap<?, ?> doGetRequest(SDKClient sdkClient, Function<UriBuilder, URI> uriBuilderFunction);
 
     /**
      * @param requestURI
@@ -43,6 +44,21 @@ public interface SDKWebClientAction {
 
     /**
      * @param sdkClient
+     * @param requestURI
+     * @return
+     */
+    HashMap<?, ?> doGetRequest(SDKClient sdkClient, String requestURI);
+
+    /**
+     * @param sdkClient
+     * @param uriBuilderFunction
+     * @return
+     */
+    HashMap<?, ?> doGetRequest(SDKClient sdkClient, Function<UriBuilder, URI> uriBuilderFunction);
+
+    /**
+     * @param sdkClient
+     * @param baseURL
      * @param requestDataMap
      * @return
      */
@@ -51,9 +67,22 @@ public interface SDKWebClientAction {
                                 final HashMap requestDataMap);
 
     /**
-     * @param requestURI
-     * @param requestDataMap
-     * @return
+     * This method is strickly
+     * used with SDKClient.builder()
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * <br/><br/><strong>Usage</strong>:
+     * <code>
+     * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doPostRequest(String requestURI)
+     * <br/>
+     * <br/>- SDKClient<br/>.builder()<br/>.buildXXXXXAPI()...<br/>.doPostRequest(String requestURI)
+     * </code>
+     * <br/>
+     *
+     * @param requestURI : the
+     * @return HashMap<?, ?> content result content as Json :
      */
     HashMap<?, ?> doPostRequest(final String requestURI,
                                 final HashMap requestDataMap);

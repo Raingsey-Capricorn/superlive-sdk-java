@@ -40,11 +40,11 @@ public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
         final HashMap<?, ?> version1_result =
                 client.doGetRequest(
                         client,
-                        SDKWebClientBuilder.buildURI(
+                        SDKWebClientBuilder.buildHttpGetURI(
                                 Optional.of(client.getEndpointHosts()),
                                 new HashMap() {{
                                     put("page", "1");
-                                    put("limit", "10");
+                                    put("limit", "1");
                                     put("search", "");
                                 }}
                         )
@@ -71,11 +71,11 @@ public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build()
                 .doGetRequest("http://merch.sp.tv/api/server-sdk/hosts",
-                        SDKWebClientBuilder.buildURI(
-                                Optional.ofNullable("/"),
+                        SDKWebClientBuilder.buildHttpGetURI(
+                                Optional.of("/"),
                                 new HashMap() {{
                                     put("page", "1");
-                                    put("limit", "10");
+                                    put("limit", "3");
                                     put("search", "");
                                 }}
                         ));
@@ -94,20 +94,21 @@ public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
     @Test
     @Order(3)
     @SneakyThrows
-    public void testVersion03_CountingHostUsingSDKClientSimple() {
+    public void testVersion03_GetHostUsingSDKClientWithQueryParam() {
 
         HashMap<?, ?> version3_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .buildMerchantHostAPI()
-                .doGetRequest("/", SDKWebClientBuilder.buildURI(
-                        Optional.ofNullable(""),
-                        new HashMap() {{
-                            put("page", "1");
-                            put("limit", "10");
-                            put("search", "");
-                        }}
-                ));
+                .doGetRequest("/",
+                        SDKWebClientBuilder.buildHttpGetURI(
+                                Optional.of("/"),
+                                new HashMap() {{
+                                    put("page", "1");
+                                    put("limit", "5");
+                                    put("search", "");
+                                }}
+                        ));
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version3_result).isEmpty()

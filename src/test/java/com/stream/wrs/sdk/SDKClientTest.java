@@ -30,7 +30,7 @@ class SDKClientTest {
         HashMap<?, ?> result = client
                 .doGetRequest(
                         client,
-                        SDKWebClientBuilder.buildURI(Optional.of(
+                        SDKWebClientBuilder.buildHttpGetURI(Optional.of(
                                         client.getEndpointHostPathVariable()),
                                 "648693da5a508510f60625fb")
                 );

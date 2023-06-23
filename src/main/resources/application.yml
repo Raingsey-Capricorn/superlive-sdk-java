@@ -30,4 +30,3 @@ webclient:
   duration:
     default: 30
     failsafe: 60
-
