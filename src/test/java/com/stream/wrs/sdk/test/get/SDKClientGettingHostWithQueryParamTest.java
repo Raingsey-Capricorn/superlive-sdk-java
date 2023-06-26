@@ -55,7 +55,6 @@ public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
                         && version1_result.containsKey("data")
                         && version1_result.get("data") != null
         );
-        log.info(new JsonMapper().writeValueAsString(version1_result));
     }
 
     /**
@@ -85,7 +84,6 @@ public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
                         && version2_result.containsKey("data")
                         && version2_result.get("data") != null
         );
-        log.info(new JsonMapper().writeValueAsString(version2_result));
     }
 
     /**
@@ -115,7 +113,6 @@ public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
                         && version3_result.containsKey("data")
                         && version3_result.get("data") != null
         );
-        log.info(new JsonMapper().writeValueAsString(version3_result));
     }
 
 }

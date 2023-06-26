@@ -47,7 +47,6 @@ public class SDKClientPuttingHostTest {
                 valueMap
         );
 
-        log.info(new JsonMapper().writeValueAsString(version1_result));
         Assertions.assertTrue(HttpStatus.valueOf(Integer.parseInt(version1_result.get("statusCode").toString())).is2xxSuccessful());
     }
 
@@ -75,7 +74,7 @@ public class SDKClientPuttingHostTest {
                     put("isChatEnabled", true);
                 }}
         );
-        log.info(new JsonMapper().writeValueAsString(version1_result));
+
         Assertions.assertTrue(HttpStatus.valueOf(Integer.parseInt(version1_result.get("statusCode").toString())).is2xxSuccessful());
     }
 
@@ -101,7 +100,6 @@ public class SDKClientPuttingHostTest {
                         }}
                 );
 
-        log.info(new JsonMapper().writeValueAsString(version1_result));
         Assertions.assertTrue(HttpStatus.valueOf(Integer.parseInt(version1_result.get("statusCode").toString())).is2xxSuccessful());
     }
 
@@ -126,7 +124,6 @@ public class SDKClientPuttingHostTest {
                         }}
                 );
 
-        log.info(new JsonMapper().writeValueAsString(version1_result));
         Assertions.assertTrue(HttpStatus.valueOf(Integer.parseInt(version1_result.get("statusCode").toString())).is2xxSuccessful());
     }
 }

@@ -32,7 +32,6 @@ import java.util.logging.Level;
 @Log
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SDKClient extends ConfigurationProperties implements SDKWebClientAction {
-
     private static SDKClient INSTANCE;
 
     /**
@@ -140,7 +139,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
      * @param superLiveHost : merchant's superlive URL
      * @return
      */
-    public SDKClient superLiveHost(String superLiveHost) {
+    public SDKClient superLiveHost(final String superLiveHost) {
         this.superLiveHost = superLiveHost;
         return INSTANCE;
     }
@@ -149,7 +148,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
      * @param endpointHosts
      * @return
      */
-    private SDKClient endpointHosts(String endpointHosts) {
+    private SDKClient endpointHosts(final String endpointHosts) {
         this.endpointHosts = endpointHosts;
         return INSTANCE;
     }
@@ -158,7 +157,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
      * @param endpointCounting
      * @return
      */
-    public SDKClient endpointCounting(String endpointCounting) {
+    public SDKClient endpointCounting(final String endpointCounting) {
         this.endpointCounting = endpointCounting;
         return INSTANCE;
     }
@@ -167,7 +166,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
      * @param endpointPathVariable
      * @return
      */
-    public SDKClient endpointPathVariable(String endpointPathVariable) {
+    public SDKClient endpointPathVariable(final String endpointPathVariable) {
         this.endpointHostPathVariable = endpointPathVariable;
         return INSTANCE;
     }
@@ -176,17 +175,16 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
      * @param endpointParticipants
      * @return
      */
-    private SDKClient endpointParticipants(String endpointParticipants) {
+    private SDKClient endpointParticipants(final String endpointParticipants) {
         this.endpointParticipants = endpointParticipants;
         return INSTANCE;
     }
-
 
     /**
      * @param accessAuthorization
      * @return
      */
-    public SDKClient accessAuthorization(String accessAuthorization) {
+    public SDKClient accessAuthorization(final String accessAuthorization) {
         this.accessAuthorization = accessAuthorization;
         return INSTANCE;
     }
@@ -195,7 +193,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
      * @param accessAuthorizationKey
      * @return
      */
-    public SDKClient accessAuthorizationKey(String accessAuthorizationKey) {
+    public SDKClient accessAuthorizationKey(final String accessAuthorizationKey) {
         this.accessAuthorizationKey = accessAuthorizationKey;
         return INSTANCE;
     }
@@ -206,7 +204,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
      * @param merchantHostId
      * @return
      */
-    public SDKClient merchantHostId(String merchantHostId) {
+    public SDKClient merchantHostId(final String merchantHostId) {
         this.merchantHostId = merchantHostId;
         return INSTANCE;
     }
@@ -217,7 +215,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
      * @param defaultWaitingDuration
      * @return
      */
-    public SDKClient defaultWaitingDuration(String defaultWaitingDuration) {
+    public SDKClient defaultWaitingDuration(final String defaultWaitingDuration) {
         this.defaultWaitingDuration = defaultWaitingDuration;
         return INSTANCE;
     }
@@ -228,48 +226,59 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
      * @param defaultFailsafeDuration
      * @return
      */
-    public SDKClient defaultFailsafeDuration(String defaultFailsafeDuration) {
+    public SDKClient defaultFailsafeDuration(final String defaultFailsafeDuration) {
         INSTANCE.defaultFailsafeDuration = defaultFailsafeDuration;
         return INSTANCE;
     }
 
     @Override
-    public HashMap<?, ?> doGetRequest(final SDKClient sdkClient, final String requestURI) {
-        return WebClient.create(sdkClient.getSuperLiveHost()).get().uri((uriBuilder) -> {
-                    uriBuilder.path(requestURI);
-                    log.info("GET Requesting through url => :" + uriBuilder.build());
-                    return uriBuilder.build();
-                }).headers((httpHeaders) -> {
+    public HashMap<?, ?> doGetRequest(final SDKClient sdkClient,
+                                      final String requestURI) {
+        return WebClient.builder()
+                .baseUrl(sdkClient.getSuperLiveHost())
+                .filters(SDKWebClientBuilder.exchangeRequestFilters())
+                .build()
+                .get()
+                .uri((uriBuilder) -> uriBuilder.path(requestURI).build()).headers((httpHeaders) -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
                 })
                 .exchange()
-                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(clientResponse -> log.log(Level.INFO, String.valueOf(clientResponse.statusCode().is2xxSuccessful())))
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(map -> {
+                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
+                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
+                })
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     @Override
-    public HashMap<?, ?> doGetRequest(SDKClient sdkClient, Function<UriBuilder, URI> uriBuilderFunction) {
+    public HashMap<?, ?> doGetRequest(final SDKClient sdkClient,
+                                      final Function<UriBuilder, URI> uriBuilderFunction) {
 
-        return WebClient.create(sdkClient.getSuperLiveHost()).get().uri((uriBuilder) -> {
-                    URI uri = uriBuilderFunction.apply(uriBuilder);
-                    log.info("GET Requesting through url => :" + uri);
-                    return uri;
-                }).headers((httpHeaders) -> {
+        return WebClient.builder()
+                .baseUrl(sdkClient.getSuperLiveHost())
+                .filters(SDKWebClientBuilder.exchangeRequestFilters())
+                .build()
+                .get()
+                .uri(uriBuilderFunction::apply)
+                .headers((httpHeaders) -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
                 })
                 .exchange()
-                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(clientResponse -> log.log(Level.INFO, String.valueOf(clientResponse.statusCode().is2xxSuccessful())))
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(map -> {
+                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
+                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
+                })
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     @Override
-    public HashMap<?, ?> doGetRequest(String requestURI) {
+    public HashMap<?, ?> doGetRequest(final String requestURI) {
 
         return SDKWebClientBuilder.buildAPIPathForHttpGet(requestURI, null, this.getAPIsPaths(), superLiveHost)
                 .headers((httpHeaders) -> {
@@ -277,53 +286,62 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
                     httpHeaders.add(this.getAccessAuthorizationKey(), this.getAccessAuthorization());
                 })
                 .exchange()
-                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(clientResponse -> log.log(Level.INFO, String.valueOf(clientResponse.statusCode().is2xxSuccessful())))
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(map -> {
+                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
+                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
+                })
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     @Override
-    public HashMap<?, ?> doGetRequest(String requestURI, Function<UriBuilder, URI> uriBuilderFunction) {
+    public HashMap<?, ?> doGetRequest(final String requestURI,
+                                      final Function<UriBuilder, URI> uriBuilderFunction) {
         return SDKWebClientBuilder.buildAPIPathForHttpGet(requestURI, uriBuilderFunction, this.getAPIsPaths(), superLiveHost).headers((httpHeaders) -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(this.getAccessAuthorizationKey(), this.getAccessAuthorization());
                 })
                 .exchange()
-                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(clientResponse -> log.log(Level.INFO, String.valueOf(clientResponse.statusCode().is2xxSuccessful())))
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(map -> {
+                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
+                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
+                })
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     @Override
     @SneakyThrows
-    public HashMap<?, ?> doPostRequest(SDKClient sdkClient,
-                                       String uri,
-                                       HashMap requestDataMap) {
+    public HashMap<?, ?> doPostRequest(final SDKClient sdkClient,
+                                       final String uri,
+                                       final HashMap requestDataMap) {
 
-        return WebClient.create(sdkClient.getSuperLiveHost())
+        return WebClient.builder()
+                .baseUrl(sdkClient.getSuperLiveHost())
+                .filters(SDKWebClientBuilder.exchangeRequestFilters())
+                .build()
                 .post()
-                .uri(uriBuilder -> {
-                    uriBuilder.path(uri);
-                    log.info("POST Requesting through url => :" + uriBuilder.build());
-                    return uriBuilder.build();
-                })
+                .uri(uriBuilder -> uriBuilder.path(uri).build())
                 .headers(httpHeaders -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
                 })
                 .body(BodyInserters.fromObject(requestDataMap))
                 .exchange()
-                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(clientResponse -> log.log(Level.INFO, String.valueOf(clientResponse.statusCode().is2xxSuccessful())))
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
-                .block();
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(map -> {
+                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
+                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
+                })
+                .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     @Override
-    public HashMap<?, ?> doPostRequest(String requestURI,
-                                       HashMap requestDataMap) {
+    public HashMap<?, ?> doPostRequest(final String requestURI,
+                                       final HashMap requestDataMap) {
 
         return SDKWebClientBuilder.buildAPIPathForHttpPost(requestURI, this.getAPIsPaths(), superLiveHost)
                 .headers(httpHeaders -> {
@@ -332,38 +350,49 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
                 })
                 .body(BodyInserters.fromObject(requestDataMap))
                 .exchange()
-                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(clientResponse -> log.log(Level.INFO, String.valueOf(clientResponse.statusCode().is2xxSuccessful())))
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(map -> {
+                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
+                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
+                })
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     @Override
-    public HashMap<?, ?> doPutRequest(SDKClient sdkClient, String requestURI, String id, HashMap requestDataMap) {
+    public HashMap<?, ?> doPutRequest(final SDKClient sdkClient,
+                                      final String requestURI,
+                                      final String id,
+                                      final HashMap requestDataMap) {
 
-        return WebClient.create(sdkClient.getSuperLiveHost())
+        return WebClient.builder()
+                .baseUrl(sdkClient.getSuperLiveHost())
+                .filters(SDKWebClientBuilder.exchangeRequestFilters())
+                .build()
                 .put()
-                .uri(uriBuilder -> {
-                    URI uri = uriBuilder
-                            .path(requestURI)
-                            .build(id);
-                    log.info("PUT Requesting through url => :" + uri);
-                    return uri;
-                })
+                .uri(uriBuilder -> uriBuilder
+                        .path(requestURI)
+                        .build(id)
+                )
                 .headers(httpHeaders -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
                 })
                 .body(BodyInserters.fromObject(requestDataMap))
                 .exchange()
-                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(clientResponse -> log.log(Level.INFO, String.valueOf(clientResponse.statusCode().is2xxSuccessful())))
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(map -> {
+                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
+                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
+                })
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     @Override
-    public HashMap<?, ?> doPutRequest(String requestURI, String id, HashMap requestDataMap) {
+    public HashMap<?, ?> doPutRequest(final String requestURI,
+                                      final String id,
+                                      final HashMap requestDataMap) {
 
         return SDKWebClientBuilder.buildAPIPathForHttpPut(requestURI, id, getAPIsPaths(), superLiveHost)
                 .headers(httpHeaders -> {
@@ -372,18 +401,57 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
                 })
                 .body(BodyInserters.fromObject(requestDataMap))
                 .exchange()
-                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(clientResponse -> log.log(Level.INFO, String.valueOf(clientResponse.statusCode().is2xxSuccessful())))
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(map -> {
+                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
+                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
+                })
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
-
     @Override
-    public HashMap<?, ?> doDeleteRequest(SDKClient sdkClient, URI uri) {
-        log.warning("execution is being constructed.... ");
-        return null;
+    public HashMap<?, ?> doDeleteRequest(final SDKClient sdkClient,
+                                         final String id,
+                                         final String requestURI) {
+
+        return WebClient.builder()
+                .baseUrl(sdkClient.getSuperLiveHost())
+                .filters(SDKWebClientBuilder.exchangeRequestFilters())
+                .build()
+                .delete()
+                .uri(uriBuilder -> uriBuilder
+                        .path(requestURI)
+                        .build(id))
+                .headers(httpHeaders -> {
+                    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+                    httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
+                })
+                .exchange()
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnSuccess(map -> {
+                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
+                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
+                })
+                .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
+    @Override
+    public HashMap<?, ?> doDeleteRequest(String requestURI, String id) {
 
+        return SDKWebClientBuilder.buildAPIPathForHttpDelete(requestURI, id, getAPIsPaths(), superLiveHost)
+                .headers(httpHeaders -> {
+                    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+                    httpHeaders.add(this.getAccessAuthorizationKey(), this.getAccessAuthorization());
+                })
+                .exchange()
+                .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(map -> {
+                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
+                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
+                })
+                .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
+    }
 }

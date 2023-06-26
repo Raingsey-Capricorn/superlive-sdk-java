@@ -33,28 +33,29 @@ public interface SDKWebClientAction {
      * @param requestURI : the
      * @return HashMap<?, ?> content result content as Json :
      */
-    HashMap<?, ?> doGetRequest(String requestURI);
+    HashMap<?, ?> doGetRequest(final String requestURI);
 
     /**
      * @param requestURI
      * @param uriBuilderFunction
      * @return
      */
-    HashMap<?, ?> doGetRequest(String requestURI, Function<UriBuilder, URI> uriBuilderFunction);
+    HashMap<?, ?> doGetRequest(final String requestURI, final Function<UriBuilder, URI> uriBuilderFunction);
 
     /**
      * @param sdkClient
      * @param requestURI
      * @return
      */
-    HashMap<?, ?> doGetRequest(SDKClient sdkClient, String requestURI);
+    HashMap<?, ?> doGetRequest(final SDKClient sdkClient, final String requestURI);
 
     /**
      * @param sdkClient
      * @param uriBuilderFunction
      * @return
      */
-    HashMap<?, ?> doGetRequest(SDKClient sdkClient, Function<UriBuilder, URI> uriBuilderFunction);
+    HashMap<?, ?> doGetRequest(final SDKClient sdkClient,
+                               final Function<UriBuilder, URI> uriBuilderFunction);
 
     /**
      * @param sdkClient
@@ -94,7 +95,10 @@ public interface SDKWebClientAction {
      * @param requestDataMap
      * @return
      */
-    HashMap<?, ?> doPutRequest(SDKClient sdkClient, String requestURI, String id, HashMap requestDataMap);
+    HashMap<?, ?> doPutRequest(final SDKClient sdkClient,
+                               final String requestURI,
+                               final String id,
+                               final HashMap requestDataMap);
 
     /**
      * @param requestURI
@@ -111,5 +115,16 @@ public interface SDKWebClientAction {
      * @param requestURI
      * @return
      */
-    HashMap<?, ?> doDeleteRequest(SDKClient sdkClient, URI requestURI);
+    HashMap<?, ?> doDeleteRequest(final SDKClient sdkClient,
+                                  final String requestURI,
+                                  final String id);
+
+    /**
+     *
+     * @param requestURI
+     * @param id
+     * @return
+     */
+    HashMap<?, ?> doDeleteRequest(final String requestURI,
+                                  final String id);
 }

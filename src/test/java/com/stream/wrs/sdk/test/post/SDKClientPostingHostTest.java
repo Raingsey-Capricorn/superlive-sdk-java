@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +29,7 @@ public class SDKClientPostingHostTest {
     @Autowired
     FileValueProvider fileProvider;
 
+    @Order(1)
     @SneakyThrows
     @Test
     public void testVersion01_PostANewHostUsingFileReaderFromJsonData() {
@@ -50,6 +52,7 @@ public class SDKClientPostingHostTest {
         Assertions.assertTrue(HttpStatus.valueOf(Integer.parseInt(version1_result.get("statusCode").toString())).is2xxSuccessful());
     }
 
+    @Order(2)
     @SneakyThrows
     @Test
     public void testVersion01_PostANewHostUsingHashMapSetup() {
@@ -76,6 +79,7 @@ public class SDKClientPostingHostTest {
         Assertions.assertTrue(HttpStatus.valueOf(Integer.parseInt(version1_result.get("statusCode").toString())).is2xxSuccessful());
     }
 
+    @Order(3)
     @SneakyThrows
     @Test
     public void testVersion02_PostANewHostUsingHashMapSetup() {
@@ -100,6 +104,7 @@ public class SDKClientPostingHostTest {
         Assertions.assertTrue(HttpStatus.valueOf(Integer.parseInt(version1_result.get("statusCode").toString())).is2xxSuccessful());
     }
 
+    @Order(4)
     @SneakyThrows
     @Test
     public void testVersion03_PostANewHostUsingHashMapSetup() {
