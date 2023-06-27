@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
@@ -21,16 +20,16 @@ import java.util.Map;
 import java.util.Objects;
 
 @SpringBootTest
-class SDKHostStreamingTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SDKHostStreamingTest.class);
+class WebClientRequestingTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebClientRequestingTest.class);
     @Autowired
     private EnvValueProvider valueProvider;
-
     @Autowired
     private FileValueProvider fileProvider;
 
     @Test
     public void testContext() {
+
         boolean assertion = valueProvider != null
                 && !valueProvider.getSuperLiveHost().isEmpty()
                 && !valueProvider.getEndpointHosts().isEmpty()

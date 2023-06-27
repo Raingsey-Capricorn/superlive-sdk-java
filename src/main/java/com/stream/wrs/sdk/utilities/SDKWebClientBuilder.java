@@ -328,6 +328,8 @@ public abstract class SDKWebClientBuilder {
             return buildHttpGetURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.GIFT), uriBuilderFunction);
         } else if (booleanList.get(3)) {
             return buildHttpGetURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.STICKER), uriBuilderFunction);
+        } else if (booleanList.get(4)) {
+            return buildHttpGetURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.UPLOAD), uriBuilderFunction);
         } else {
             return Pattern.compile(FQDN_PATTERN).matcher(uri).find() ?
                     buildHttpGetURI(SDKWebClientBuilder.buildFQDN(uri), uriBuilderFunction) :
@@ -354,6 +356,8 @@ public abstract class SDKWebClientBuilder {
             return buildHttpPostURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.GIFT));
         } else if (booleanList.get(3)) {
             return buildHttpPostURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.STICKER));
+        } else if (booleanList.get(4)) {
+            return buildHttpPostURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.UPLOAD));
         } else {
             return Pattern.compile(FQDN_PATTERN).matcher(uri).find() ?
                     buildHttpPostURI(SDKWebClientBuilder.buildFQDN(uri)) :
@@ -383,6 +387,8 @@ public abstract class SDKWebClientBuilder {
             return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.GIFT));
         } else if (booleanList.get(3)) {
             return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.STICKER));
+        } else if (booleanList.get(4)) {
+            return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.UPLOAD));
         } else {
             return Pattern.compile(FQDN_PATTERN).matcher(uri).find() ?
                     buildHttpPutURI(id, SDKWebClientBuilder.buildFQDN(uri)) :
@@ -411,6 +417,8 @@ public abstract class SDKWebClientBuilder {
             return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.GIFT));
         } else if (booleanList.get(3)) {
             return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.STICKER));
+        } else if (booleanList.get(4)) {
+            return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.UPLOAD));
         } else {
             return Pattern.compile(FQDN_PATTERN).matcher(uri).find() ?
                     buildHttpDeleteURI(id, SDKWebClientBuilder.buildFQDN(uri)) :

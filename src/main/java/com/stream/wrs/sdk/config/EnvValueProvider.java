@@ -1,7 +1,10 @@
 package com.stream.wrs.sdk.config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 
 /**
@@ -14,53 +17,93 @@ import org.springframework.stereotype.Component;
 @Component
 public class EnvValueProvider extends ConfigurationProperties {
 
-    @Value("${superlive.configuration.merchant.host:http://merch.sp.tv/api/server-sdk}")
+    @Value("${config.superlive.auth-value}")
+    private void accessAuthorization(String accessAuthorization) {
+        this.accessAuthorization = accessAuthorization;
+    }
+
+    @Value("${config.superlive.host}")
     private void setSuperLiveHost(String superLiveHost) {
         this.superLiveHost = superLiveHost;
     }
 
-    @Value("${superlive.configuration.merchant.endpoints.hosts:http://merch.sp.tv/api/server-sdk/hosts}")
-    private void setEndpointHosts(String endpointHosts) {
-        this.endpointHosts = endpointHosts;
+    @Value("${config.superlive.sdk-api}")
+    private void setSuperLiveApiUri(String superLiveApiUri) {
+        this.superLiveApiUri = superLiveApiUri;
     }
 
-    @Value("${superlive.configuration.merchant.endpoints.counting:http://merch.sp.tv/api/server-sdk/hosts/count}")
-    private void setEndpointCounting(String endpointCounting) {
-        this.endpointCounting = endpointCounting;
+    @Value("${config.superlive.endpoints.host.index:http://merch.sp.tv/api/server-sdk/hosts}")
+    private void setHostIndex(String hostIndex) {
+        Host.index = hostIndex;
     }
 
-    @Value("${superlive.configuration.merchant.endpoints.path-variable:http://merch.sp.tv/api/server-sdk/hosts/{id}}")
-    private void setEndpointPathVariable(String endpointPathVariable) {
-        this.endpointHostPathVariable = endpointPathVariable;
+    @Value("${config.superlive.endpoints.host.count:http://merch.sp.tv/api/server-sdk/hosts/count}")
+    private void setHostCount(String hostCount) {
+        Host.count = hostCount;
     }
 
-    @Value("${superlive.configuration.merchant.endpoints.participants:http://merch.sp.tv/api/server-sdk/participants}")
-    private void setEndpointParticipants(String endpointParticipants) {
-        this.endpointParticipants = endpointParticipants;
+    @Value("${config.superlive.endpoints.host.path-variable:http://merch.sp.tv/api/server-sdk/hosts/{id}}")
+    private void setHostPathVariable(String hostPathVariableId) {
+        Host.pathVariableId = hostPathVariableId;
     }
 
-    @Value("${superlive.configuration.merchant.authorization-value:648693da5a508510f60625fb}")
-    private void setAccessAuthorization(String accessAuthorization) {
-        this.accessAuthorization = accessAuthorization;
+    @Value("${config.superlive.endpoints.participant.index:http://merch.sp.tv/api/server-sdk/participants}")
+    private void setParticipantIndex(String participantIndex) {
+        Participant.index = participantIndex;
     }
 
-    @Value("${superlive.constants.authorization-key:Authorization}")
-    private void setAccessAuthorizationKey(String accessAuthorizationKey) {
-        this.accessAuthorizationKey = accessAuthorizationKey;
+    @Value("${config.superlive.endpoints.participant.path-variable:http://merch.sp.tv/api/server-sdk/participants/{id}}")
+    private void setParticipantPathVariableId(String pathVariableId) {
+        Participant.pathVariableId = pathVariableId;
     }
 
-    @Value("${superlive.configuration.merchant.host-id:648a77d088c133b4c4b96f8a}")
-    private void setMerchantHostId(String merchantHostId) {
-        this.merchantHostId = merchantHostId;
+    @Value("${config.superlive.endpoints.participant.gift-points:http://merch.sp.tv/api/server-sdk/participants/{id}/credit/gift-point}")
+    private void setParticipantGiftPoints(String giftPoints) {
+        Participant.giftPoints = giftPoints;
     }
 
-    @Value("${webclient.duration.default:30}")
-    private void setDefaultWaitingDuration(String defaultWaitingDuration) {
-        this.defaultWaitingDuration = defaultWaitingDuration;
+    @Value("${config.superlive.endpoints.gift.index:http://merch.sp.tv/api/server-sdk/gifts}")
+    private void setGiftIndex(String giftIndex) {
+        Gift.index = giftIndex;
     }
 
-    @Value("${webclient.duration.failsafe:60}")
-    private void setDefaultFailsafeDuration(String defaultFailsafeDuration) {
-        this.defaultFailsafeDuration = defaultFailsafeDuration;
+    @Value("${config.superlive.endpoints.gift.packs:http://merch.sp.tv/api/server-sdk/gifts/packs}")
+    private void setGiftPacks(String giftPacks) {
+        Gift.packs = giftPacks;
+    }
+
+    @Value("${config.superlive.endpoints.gift.path-variable:http://merch.sp.tv/api/server-sdk/gifts/{id}}")
+    private void setGiftPathVariableId(String giftPathVariableId) {
+        Gift.pathVariableId = giftPathVariableId;
+    }
+
+    @Value("${config.superlive.endpoints.gift.packs-path-variable:http://merch.sp.tv/api/server-sdk/gifts/packs/{id}}")
+    private void setGiftPathVariablePacksId(String giftPathVariablePacksId) {
+        Gift.pathVariablePacksId = giftPathVariablePacksId;
+    }
+
+    @Value("${config.superlive.endpoints.sticker.index:http://merch.sp.tv/api/server-sdk/stickers}")
+    private void setStickerIndex(String stickerIndex) {
+        Sticker.index = stickerIndex;
+    }
+
+    @Value("${config.superlive.endpoints.sticker.packs:http://merch.sp.tv/api/server-sdk/stickers/packs}")
+    private void setStickerPacks(String stickerPacks) {
+        Sticker.packs = stickerPacks;
+    }
+
+    @Value("${config.superlive.endpoints.sticker.path-variable:http://merch.sp.tv/api/server-sdk/stickers/{id}}")
+    private void setStickerPathVariableId(String stickerPathVariableId) {
+        Sticker.pathVariableId = stickerPathVariableId;
+    }
+
+    @Value("${config.superlive.endpoints.sticker.packs-path-variable:http://merch.sp.tv/api/server-sdk/stickers/packs/{id}}")
+    private void setStickerPathVariablePacksId(String stickerPathVariablePacksId) {
+        Sticker.pathVariablePacksId = stickerPathVariablePacksId;
+    }
+
+    @Value("${config.superlive.endpoints.upload.index:http://merch.sp.tv/api/server-sdk/upload/file}")
+    private void setUploadIndex(String uploadIndex) {
+        Upload.index = uploadIndex;
     }
 }

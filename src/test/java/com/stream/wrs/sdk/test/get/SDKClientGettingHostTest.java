@@ -1,6 +1,7 @@
 package com.stream.wrs.sdk.test.get;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.stream.wrs.sdk.config.ConfigurationProperties;
 import com.stream.wrs.sdk.test.CommonTestConfig;
 import com.stream.wrs.sdk.utilities.SDKClient;
 import lombok.SneakyThrows;
@@ -37,7 +38,7 @@ public class SDKClientGettingHostTest extends CommonTestConfig {
         final HashMap<?, ?> version1_result =
                 client.doGetRequest(
                         client,
-                        client.getEndpointCounting());
+                        ConfigurationProperties.Host.count);
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version1_result).isEmpty()

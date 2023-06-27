@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -52,6 +53,22 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
         INSTANCE.endpointCounting = INSTANCE.endpointHosts + "/count";
         INSTANCE.endpointHostPathVariable = INSTANCE.endpointHosts + "/{id}";
         INSTANCE.superLiveHost = "http://merch.sp.tv/api/server-sdk";
+
+        Host.index = "/hosts";
+        Host.count = "/hosts/count";
+        Host.pathVariableId = "/hosts/{id}}";
+        Participant.index = "http://merch.sp.tv/api/server-sdk/participants";
+        Participant.pathVariableId = "/participants/{id}";
+        Participant.giftPoints = "/participants/{id}/credit/gift-point";
+        Gift.index = "/gifts";
+        Gift.packs = "/gifts/packs";
+        Gift.pathVariableId = "/gifts/{id}";
+        Gift.pathVariablePacksId = "/gifts/packs/{id}";
+        Sticker.index = "/stickers";
+        Sticker.packs = "/stickers/packs";
+        Sticker.pathVariableId = "/stickers/{id}";
+        Sticker.pathVariablePacksId = "/stickers/packs/{id}";
+        Upload.index = "/upload/file";
         return INSTANCE;
     }
 
@@ -121,7 +138,20 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
     }
 
     public SDKClient buildGiftAPI() {
-        INSTANCE.setSticker(true);
+        INSTANCE.setGift(true);
+        if (INSTANCE.superLiveHost != null && !INSTANCE.superLiveHost.isEmpty() &&
+                INSTANCE.accessAuthorization != null && !INSTANCE.accessAuthorization.isEmpty() &&
+                INSTANCE.accessAuthorizationKey != null && !INSTANCE.accessAuthorizationKey.isEmpty()
+        ) {
+            return INSTANCE;
+        } else {
+            log.info("Some field is not correctly configured for host-api. Checking is required!");
+            return INSTANCE;
+        }
+    }
+
+    public SDKClient buildUploadAPI() {
+        INSTANCE.setUpload(true);
         if (INSTANCE.superLiveHost != null && !INSTANCE.superLiveHost.isEmpty() &&
                 INSTANCE.accessAuthorization != null && !INSTANCE.accessAuthorization.isEmpty() &&
                 INSTANCE.accessAuthorizationKey != null && !INSTANCE.accessAuthorizationKey.isEmpty()

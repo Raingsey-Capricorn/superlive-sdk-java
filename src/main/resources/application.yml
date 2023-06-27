@@ -1,30 +1,32 @@
-superlive:
-  configuration:
-    merchant:
-      authorization-value: ${AUTHORIZATION_KEY:dqkoimeT_qNak4E9Fl6DfKY_}
-      host-id: ${HOST_ID:648693da5a508510f60625fb}
-      host: ${HOST:http://merch.sp.tv}
-      api-path: /api/server-sdk
-      endpoints:
-        hosts: ${superlive.configuration.merchant.api-path}/hosts
-        hosts-counting: ${superlive.configuration.merchant.endpoints.hosts}/count
-        hosts-path-id: ${superlive.configuration.merchant.endpoints.hosts}/{id}
-
-        participants: ${superlive.configuration.merchant.api-path}/participants
-        participants-path-id: ${superlive.configuration.merchant.endpoints.participants}/{id}
-
-        gifts: ${superlive.configuration.merchant.api-path}/gifts
-        gifts-path-id: ${superlive.configuration.merchant.endpoints.gifts}/{id}
-        gifts-packs: ${superlive.configuration.merchant.endpoints.gifts}/packs
-        gifts-packs-path-id: ${superlive.configuration.merchant.endpoints.gifts-packs}/{id}
-
-        stickers: ${superlive.configuration.merchant.api-path}/stickers
-        stickers-path-id: ${superlive.configuration.merchant.endpoints.stickers}/{id}
-        stickers-packs: ${superlive.configuration.merchant.endpoints.stickers}/packs
-        stickers-packs-path-id: ${superlive.configuration.merchant.endpoints.stickers-packs}/{id}
+config:
+  superlive:
+    auth-value: ${AUTH_VALUE:dqkoimeT_qNak4E9Fl6DfKY_}
+    host: ${HOST:http://merch.sp.tv}
+    sdk-api: /api/server-sdk
+    endpoints:
+      host:
+        index: /hosts
+        count: ${config.superlive.endpoints.host.index}/count
+        path-variable: ${config.superlive.endpoints.host.index}/{id}
+      participant:
+        index: /participants
+        path-variable: ${config.superlive.endpoints.participant.index}/{id}
+        gift-points: ${config.superlive.endpoints.participant.index}/{id}/credit/gift-point
+      gift:
+        index: /gifts
+        packs: ${config.superlive.endpoints.gift.index}/packs
+        path-variable: ${config.superlive.endpoints.gift.index}/{id}
+        packs-path-variable: ${config.superlive.endpoints.gift.packs}/{id}
+      sticker:
+        index: /stickers
+        packs: ${config.superlive.endpoints.sticker.index}/packs
+        path-variable: ${config.superlive.endpoints.sticker.index}/{id}
+        packs-path-variable: ${config.superlive.endpoints.sticker.packs}/{id}
+      upload:
+        index: /upload/file
 
   constants:
-    authorization-key: Authorization
+    auth-key: ${AUTH_KEY:Authorization}
 
 webclient:
   duration:
