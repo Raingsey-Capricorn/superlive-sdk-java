@@ -134,6 +134,5 @@ public class FileValueProvider<T> {
                 Paths.get(fileName).toFile(),
                 HashMap.class
         );
-
     }
 }

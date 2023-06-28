@@ -51,6 +51,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
         INSTANCE.accessAuthorizationKey = "Authorization";
         INSTANCE.endpointCounting = INSTANCE.endpointHosts + "/count";
         INSTANCE.endpointHostPathVariable = INSTANCE.endpointHosts + "/{id}";
+        INSTANCE.endpointParticipantsPathVariable = INSTANCE.endpointParticipants + "/{id}";
         INSTANCE.superLiveHost = "http://merch.sp.tv/api/server-sdk";
 
         Host.index = "/hosts";

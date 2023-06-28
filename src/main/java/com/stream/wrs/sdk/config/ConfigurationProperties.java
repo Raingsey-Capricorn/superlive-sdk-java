@@ -22,7 +22,6 @@ public abstract class ConfigurationProperties {
         UPLOAD("/upload"),
         STICKER("/stickers");
 
-
         public final String pathName;
 
         ApiPath(String pathName) {
