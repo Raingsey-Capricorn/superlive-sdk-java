@@ -1,4 +1,4 @@
-package com.stream.wrs.sdk.test.delete;
+package com.stream.wrs.sdk.test.api.delete;
 
 import com.stream.wrs.sdk.test.CommonTestConfig;
 import com.stream.wrs.sdk.utilities.SDKClient;
@@ -21,7 +21,6 @@ import java.util.Objects;
 
 @Log
 public class SDKClientDeletionTest extends CommonTestConfig {
-
 
     @Test
     @Order(1)
@@ -80,7 +79,7 @@ public class SDKClientDeletionTest extends CommonTestConfig {
         final HashMap version1_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
-                .buildMerchantHostAPI()
+                .buildApiHost()
                 .doDeleteRequest(
                         SDKClient.builder().getEndpointHostPathVariable(),
                         "64926d22e969a07a83abfc90"

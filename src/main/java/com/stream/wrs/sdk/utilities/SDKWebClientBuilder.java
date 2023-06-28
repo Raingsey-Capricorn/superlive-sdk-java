@@ -1,6 +1,5 @@
 package com.stream.wrs.sdk.utilities;
 
-import com.stream.wrs.sdk.config.ConfigurationProperties;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.springframework.util.LinkedMultiValueMap;
@@ -320,21 +319,21 @@ public abstract class SDKWebClientBuilder {
             final List<Boolean> booleanList,
             final String superLiveHost) {
 
-        if (booleanList.get(0)) {
-            return buildHttpGetURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.HOST), uriBuilderFunction);
-        } else if (booleanList.get(1)) {
-            return buildHttpGetURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.PARTICIPANT), uriBuilderFunction);
-        } else if (booleanList.get(2)) {
-            return buildHttpGetURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.GIFT), uriBuilderFunction);
-        } else if (booleanList.get(3)) {
-            return buildHttpGetURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.STICKER), uriBuilderFunction);
-        } else if (booleanList.get(4)) {
-            return buildHttpGetURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.UPLOAD), uriBuilderFunction);
-        } else {
+        if (booleanList.get(0))
+            return buildHttpGetURI(superLiveHost, simplifyURI(uri, SDKClient.ApiPath.HOST), uriBuilderFunction);
+        else if (booleanList.get(1))
+            return buildHttpGetURI(superLiveHost, simplifyURI(uri, SDKClient.ApiPath.PARTICIPANT), uriBuilderFunction);
+        else if (booleanList.get(2))
+            return buildHttpGetURI(superLiveHost, simplifyURI(uri, SDKClient.ApiPath.GIFT), uriBuilderFunction);
+        else if (booleanList.get(3))
+            return buildHttpGetURI(superLiveHost, simplifyURI(uri, SDKClient.ApiPath.STICKER), uriBuilderFunction);
+        else if (booleanList.get(4))
+            return buildHttpGetURI(superLiveHost, simplifyURI(uri, SDKClient.ApiPath.UPLOAD), uriBuilderFunction);
+        else
             return Pattern.compile(FQDN_PATTERN).matcher(uri).find() ?
                     buildHttpGetURI(SDKWebClientBuilder.buildFQDN(uri), uriBuilderFunction) :
                     buildHttpGetURI(superLiveHost, uri, uriBuilderFunction);
-        }
+
     }
 
     /**
@@ -348,22 +347,20 @@ public abstract class SDKWebClientBuilder {
             final List<Boolean> booleanList,
             final String superLiveHost) {
 
-        if (booleanList.get(0)) {
-            return buildHttpPostURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.HOST));
-        } else if (booleanList.get(1)) {
-            return buildHttpPostURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.PARTICIPANT));
-        } else if (booleanList.get(2)) {
-            return buildHttpPostURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.GIFT));
-        } else if (booleanList.get(3)) {
-            return buildHttpPostURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.STICKER));
-        } else if (booleanList.get(4)) {
-            return buildHttpPostURI(superLiveHost, simplifyURI(uri, ConfigurationProperties.ApiPath.UPLOAD));
-        } else {
+        if (booleanList.get(0))
+            return buildHttpPostURI(superLiveHost, simplifyURI(uri, SDKClient.ApiPath.HOST));
+        else if (booleanList.get(1))
+            return buildHttpPostURI(superLiveHost, simplifyURI(uri, SDKClient.ApiPath.PARTICIPANT));
+        else if (booleanList.get(2))
+            return buildHttpPostURI(superLiveHost, simplifyURI(uri, SDKClient.ApiPath.GIFT));
+        else if (booleanList.get(3))
+            return buildHttpPostURI(superLiveHost, simplifyURI(uri, SDKClient.ApiPath.STICKER));
+        else if (booleanList.get(4))
+            return buildHttpPostURI(superLiveHost, simplifyURI(uri, SDKClient.ApiPath.UPLOAD));
+        else
             return Pattern.compile(FQDN_PATTERN).matcher(uri).find() ?
                     buildHttpPostURI(SDKWebClientBuilder.buildFQDN(uri)) :
                     buildHttpPostURI(superLiveHost, uri);
-
-        }
     }
 
     /**
@@ -379,21 +376,20 @@ public abstract class SDKWebClientBuilder {
             final List<Boolean> booleanList,
             final String superLiveHost) {
 
-        if (booleanList.get(0)) {
-            return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.HOST));
-        } else if (booleanList.get(1)) {
-            return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.PARTICIPANT));
-        } else if (booleanList.get(2)) {
-            return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.GIFT));
-        } else if (booleanList.get(3)) {
-            return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.STICKER));
-        } else if (booleanList.get(4)) {
-            return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.UPLOAD));
-        } else {
+        if (booleanList.get(0))
+            return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, SDKClient.ApiPath.HOST));
+        else if (booleanList.get(1))
+            return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, SDKClient.ApiPath.PARTICIPANT));
+        else if (booleanList.get(2))
+            return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, SDKClient.ApiPath.GIFT));
+        else if (booleanList.get(3))
+            return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, SDKClient.ApiPath.STICKER));
+        else if (booleanList.get(4))
+            return buildHttpPutURI(superLiveHost, id, simplifyURI(uri, SDKClient.ApiPath.UPLOAD));
+        else
             return Pattern.compile(FQDN_PATTERN).matcher(uri).find() ?
                     buildHttpPutURI(id, SDKWebClientBuilder.buildFQDN(uri)) :
                     buildHttpPutURI(superLiveHost, id, uri);
-        }
     }
 
     /**
@@ -409,33 +405,33 @@ public abstract class SDKWebClientBuilder {
             final List<Boolean> booleanList,
             final String superLiveHost) {
 
-        if (booleanList.get(0)) {
-            return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.HOST));
-        } else if (booleanList.get(1)) {
-            return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.PARTICIPANT));
-        } else if (booleanList.get(2)) {
-            return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.GIFT));
-        } else if (booleanList.get(3)) {
-            return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.STICKER));
-        } else if (booleanList.get(4)) {
-            return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, ConfigurationProperties.ApiPath.UPLOAD));
-        } else {
+        if (booleanList.get(0))
+            return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, SDKClient.ApiPath.HOST));
+        else if (booleanList.get(1))
+            return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, SDKClient.ApiPath.PARTICIPANT));
+        else if (booleanList.get(2))
+            return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, SDKClient.ApiPath.GIFT));
+        else if (booleanList.get(3))
+            return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, SDKClient.ApiPath.STICKER));
+        else if (booleanList.get(4))
+            return buildHttpDeleteURI(superLiveHost, id, simplifyURI(uri, SDKClient.ApiPath.UPLOAD));
+        else
             return Pattern.compile(FQDN_PATTERN).matcher(uri).find() ?
                     buildHttpDeleteURI(id, SDKWebClientBuilder.buildFQDN(uri)) :
                     buildHttpDeleteURI(superLiveHost, id, uri);
-        }
     }
+
 
     /**
      * @param uri
      * @param apiPath
      * @return
      */
-    private static String simplifyURI(String uri, ConfigurationProperties.ApiPath apiPath) {
+    private static String simplifyURI(String uri, SDKClient.ApiPath apiPath) {
 
         return uri.contains(apiPath.pathName) ?
                 String.format("%s", uri) :
-                String.format("%s/%s", ConfigurationProperties.ApiPath.HOST.pathName, uri);
+                String.format("%s/%s", SDKClient.ApiPath.HOST.pathName, uri);
     }
 
 }

@@ -1,6 +1,5 @@
-package com.stream.wrs.sdk.test.put;
+package com.stream.wrs.sdk.test.api.put;
 
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.stream.wrs.sdk.config.FileValueProvider;
 import com.stream.wrs.sdk.utilities.SDKClient;
 import lombok.SneakyThrows;
@@ -87,7 +86,7 @@ public class SDKClientPuttingHostTest {
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build()
                 .doPutRequest(
-                        "/hosts/{id}",
+                        SDKClient.Host.pathVariableId,
                         "649566c41f37fc99fb8de30b",
                         new HashMap() {{
                             put("name", "SampleHost" + RandomStringUtils.randomAlphabetic(5).toUpperCase(Locale.ROOT));
@@ -109,7 +108,7 @@ public class SDKClientPuttingHostTest {
 
         HashMap version1_result = SDKClient.builder()
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
-                .buildMerchantHostAPI()
+                .buildApiHost()
                 .doPutRequest(
                         "/{id}",
                         "649566c41f37fc99fb8de30b",

@@ -2,7 +2,6 @@ package com.stream.wrs.sdk.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,15 +22,17 @@ public abstract class ConfigurationProperties {
         UPLOAD("/upload"),
         STICKER("/stickers");
 
+
         public final String pathName;
 
         ApiPath(String pathName) {
             this.pathName = pathName;
         }
+
     }
 
     protected String superLiveHost;
-    protected String superLiveApiUri;
+    protected String superLiveApiUri = "/api/server-sdk";
     protected String accessAuthorization;
     protected String accessAuthorizationKey;
     protected String endpointHosts;
@@ -101,6 +102,6 @@ public abstract class ConfigurationProperties {
     protected boolean isUpload;
 
     public List<Boolean> getAPIsPaths() {
-        return Arrays.asList(isHost, isParticipants, isGift, isSticker);
+        return Arrays.asList(isHost, isParticipants, isGift, isSticker, isUpload);
     }
 }

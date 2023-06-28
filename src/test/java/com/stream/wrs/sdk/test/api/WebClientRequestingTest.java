@@ -1,4 +1,4 @@
-package com.stream.wrs.sdk;
+package com.stream.wrs.sdk.test.api;
 
 import com.stream.wrs.sdk.config.EnvValueProvider;
 import com.stream.wrs.sdk.config.FileValueProvider;

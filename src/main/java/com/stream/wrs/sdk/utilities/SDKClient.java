@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,7 +24,7 @@ import java.util.logging.Level;
  * INSTANCE class is mainly used to apply getter and setter for the configuration,
  * it's supposed to be the central of SDK calling point.
  *
- * @see ConfigurationProperties
+ * @see SDKClient
  * All webclient request action will be delegated to the subclass, which provide
  * fully applicable implementation without changing the original concept of SDKClient
  * @see SDKWebClientAction
@@ -57,7 +56,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
         Host.index = "/hosts";
         Host.count = "/hosts/count";
         Host.pathVariableId = "/hosts/{id}}";
-        Participant.index = "http://merch.sp.tv/api/server-sdk/participants";
+        Participant.index = "/participants";
         Participant.pathVariableId = "/participants/{id}";
         Participant.giftPoints = "/participants/{id}/credit/gift-point";
         Gift.index = "/gifts";
@@ -95,7 +94,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
         }
     }
 
-    public SDKClient buildMerchantHostAPI() {
+    public SDKClient buildApiHost() {
         INSTANCE.setHost(true);
         if (INSTANCE.superLiveHost != null && !INSTANCE.superLiveHost.isEmpty() &&
                 INSTANCE.endpointHosts != null && !INSTANCE.endpointHosts.isEmpty() &&
@@ -111,7 +110,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
 
     }
 
-    public SDKClient buildParticipantAPI() {
+    public SDKClient buildApiParticipant() {
         INSTANCE.setParticipants(true);
         if (INSTANCE.superLiveHost != null && !INSTANCE.superLiveHost.isEmpty() &&
                 INSTANCE.accessAuthorization != null && !INSTANCE.accessAuthorization.isEmpty() &&
@@ -124,7 +123,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
         }
     }
 
-    public SDKClient buildStickerAPI() {
+    public SDKClient buildApiSticker() {
         INSTANCE.setSticker(true);
         if (INSTANCE.superLiveHost != null && !INSTANCE.superLiveHost.isEmpty() &&
                 INSTANCE.accessAuthorization != null && !INSTANCE.accessAuthorization.isEmpty() &&
@@ -137,7 +136,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
         }
     }
 
-    public SDKClient buildGiftAPI() {
+    public SDKClient buildApiGift() {
         INSTANCE.setGift(true);
         if (INSTANCE.superLiveHost != null && !INSTANCE.superLiveHost.isEmpty() &&
                 INSTANCE.accessAuthorization != null && !INSTANCE.accessAuthorization.isEmpty() &&
@@ -150,7 +149,7 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
         }
     }
 
-    public SDKClient buildUploadAPI() {
+    public SDKClient buildApiUpload() {
         INSTANCE.setUpload(true);
         if (INSTANCE.superLiveHost != null && !INSTANCE.superLiveHost.isEmpty() &&
                 INSTANCE.accessAuthorization != null && !INSTANCE.accessAuthorization.isEmpty() &&
@@ -166,9 +165,14 @@ public class SDKClient extends ConfigurationProperties implements SDKWebClientAc
     /**
      * Set superlive's host
      *
-     * @param superLiveHost : merchant's superlive URL
+     * @param superLiveApiUri : merchant's superlive api URI
      * @return
      */
+    public SDKClient superLiveApiUri(final String superLiveApiUri) {
+        this.superLiveApiUri = superLiveApiUri;
+        return INSTANCE;
+    }
+
     public SDKClient superLiveHost(final String superLiveHost) {
         this.superLiveHost = superLiveHost;
         return INSTANCE;

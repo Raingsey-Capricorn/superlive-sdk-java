@@ -1,4 +1,4 @@
-package com.stream.wrs.sdk.test.post;
+package com.stream.wrs.sdk.test.api.post;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.stream.wrs.sdk.config.FileValueProvider;
@@ -111,7 +111,7 @@ public class SDKClientPostingHostTest {
 
         HashMap version1_result = SDKClient.builder()
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
-                .buildMerchantHostAPI()
+                .buildApiHost()
                 .doPostRequest(
                         "/",
                         new HashMap() {{
