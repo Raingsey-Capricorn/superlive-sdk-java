@@ -18,10 +18,6 @@ public interface SDKWebClientAction {
     /**
      * This method is strickly
      * used with SDKClient.builder()
-     * <br/>{
-     * "statusCode": xxx,
-     * "data": {...}
-     * }
      * <br/><br/><strong>Usage</strong>:
      * <code>
      * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doGetRequest(String requestURI)
@@ -32,16 +28,16 @@ public interface SDKWebClientAction {
      *
      * @param requestURI : the requestURI
      * @return HashMap<?, ?> content result content as Json :
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
      */
     HashMap<?, ?> doGetRequest(final String requestURI);
 
     /**
      * This method is strickly
      * used with SDKClient.builder()
-     * <br/>{
-     * "statusCode": xxx,
-     * "data": {...}
-     * }
      * <br/><br/><strong>Usage</strong>:
      * <code>
      * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doGetRequest(final String requestURI, final Function<UriBuilder, URI> uriBuilderFunction)
@@ -50,9 +46,14 @@ public interface SDKWebClientAction {
      * </code>
      * <br/>
      *
-     * @param requestURI
-     * @param uriBuilderFunction
+     * @param requestURI         : the uri appending to the APi's uri
+     * @param uriBuilderFunction :fully customized uri
      * @return HashMap<?, ?> content result content as Json :
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * @see Function<UriBuilder, URI>
      */
     HashMap<?, ?> doGetRequest(final String requestURI, final Function<UriBuilder, URI> uriBuilderFunction);
 
@@ -84,10 +85,6 @@ public interface SDKWebClientAction {
     /**
      * This method is strickly
      * used with SDKClient.builder()
-     * <br/>{
-     * "statusCode": xxx,
-     * "data": {...}
-     * }
      * <br/><br/><strong>Usage</strong>:
      * <code>
      * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doPostRequest(String requestURI)
@@ -96,8 +93,12 @@ public interface SDKWebClientAction {
      * </code>
      * <br/>
      *
-     * @param requestURI : the
-     * @return HashMap<?, ?> content result content as Json :
+     * @param requestURI     : the uri appending to the APi's uri
+     * @param requestDataMap : the request body represented as HashMap to post
+     *                       <br/>{
+     *                       "statusCode": xxx,
+     *                       "data": {...}
+     *                       }
      */
     HashMap<?, ?> doPostRequest(final String requestURI,
                                 final HashMap requestDataMap);
@@ -118,10 +119,6 @@ public interface SDKWebClientAction {
     /**
      * This method is strickly
      * used with SDKClient.builder()
-     * <br/>{
-     * "statusCode": xxx,
-     * "data": {...}
-     * }
      * <br/><br/><strong>Usage</strong>:
      * <code>
      * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doPutRequest(final String requestURI, final String id, final HashMap requestDataMap)
@@ -130,10 +127,14 @@ public interface SDKWebClientAction {
      * </code>
      * <br/>
      *
-     * @param requestURI
-     * @param id
-     * @param requestDataMap
+     * @param requestURI     : the uri appending to the APi's uri
+     * @param id             : the id value to delete through this uri (.../{id})
+     * @param requestDataMap : the request body represented as HashMap
      * @return HashMap<?, ?> content result content as Json :
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
      */
     HashMap<?, ?> doPutRequest(final String requestURI,
                                final String id,
@@ -151,10 +152,6 @@ public interface SDKWebClientAction {
     /**
      * This method is strickly
      * used with SDKClient.builder()
-     * <br/>{
-     * "statusCode": xxx,
-     * "data": {...}
-     * }
      * <br/><br/><strong>Usage</strong>:
      * <code>
      * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doDeleteRequest(final String requestURI, final String id)
@@ -163,9 +160,13 @@ public interface SDKWebClientAction {
      * </code>
      * <br/>
      *
-     * @param requestURI
-     * @param id
+     * @param requestURI : the uri appending to the APi's uri
+     * @param id         : the id value to delete through this uri (.../{id})
      * @return HashMap<?, ?> content result content as Json :
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
      */
     HashMap<?, ?> doDeleteRequest(final String requestURI,
                                   final String id);
