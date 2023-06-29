@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Objects;
  * Project : superlive-sdk-java
  */
 @Log
-public class SDKClientGettingHostTest extends CommonTestConfig {
+class SDKClientGettingHostTest extends CommonTestConfig {
 
     /**
      *
@@ -26,17 +27,17 @@ public class SDKClientGettingHostTest extends CommonTestConfig {
     @Test
     @Order(1)
     @SneakyThrows
-    public void testVersion01_CountingHostUsingSDKClientSimple() {
+    void testVersion01_CountingHostUsingSDKClientSimple() {
 
         final SDKClient client = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build();
 
-        final HashMap<?, ?> version1_result =
+        final Map<?, ?> version1_result =
                 client.doGetRequest(
                         client,
-                        SDKClient.Host.count);
+                        SDKClient.Host.getCount());
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version1_result).isEmpty()
@@ -49,7 +50,7 @@ public class SDKClientGettingHostTest extends CommonTestConfig {
     @Test
     @Order(2)
     @SneakyThrows
-    public void testVersion02_CountingHostUsingSDKClientSimple() {
+    void testVersion02_CountingHostUsingSDKClientSimple() {
 
         HashMap<?, ?> version2_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
@@ -70,7 +71,7 @@ public class SDKClientGettingHostTest extends CommonTestConfig {
     @Test
     @Order(3)
     @SneakyThrows
-    public void testVersion03_CountingHostUsingSDKClientSimple() {
+    void testVersion03_CountingHostUsingSDKClientSimple() {
 
         HashMap<?, ?> version3_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")

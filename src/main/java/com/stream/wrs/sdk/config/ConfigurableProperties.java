@@ -1,7 +1,10 @@
 package com.stream.wrs.sdk.config;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.java.Log;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +15,7 @@ import java.util.List;
  * Date    : 15/6/23
  * Project : superlive-sdk-java
  */
+@Log
 @Getter
 public abstract class ConfigurableProperties {
 
@@ -46,47 +50,82 @@ public abstract class ConfigurableProperties {
     /**
      * Host API - class to manage the calling and usage
      */
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Host {
-        public static String index;
-        public static String count;
-        public static String pathVariableId;
+        @Setter
+        @Getter
+        private static String index;
+        @Setter
+        @Getter
+        private static String count;
+        @Setter
+        @Getter
+        private static String pathVariableId;
+
     }
 
     /**
      * Participant API - class to manage the calling and usage
      */
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Participant {
-        public static String index;
-        public static String giftPoints;
-        public static String pathVariableId;
+        @Setter
+        @Getter
+        private static String index;
+        @Setter
+        @Getter
+        private static String giftPoints;
+        @Setter
+        @Getter
+        private static String pathVariableId;
     }
 
     /**
      * Gift API - class to manage the calling and usage
      */
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Gift {
-        public static String index;
-        public static String packs;
-        public static String pathVariableId;
-        public static String pathVariablePacksId;
+        @Setter
+        @Getter
+        private static String index;
+        @Setter
+        @Getter
+        private static String packs;
+        @Setter
+        @Getter
+        private static String pathVariableId;
+        @Setter
+        @Getter
+        private static String pathVariablePacksId;
     }
 
     /**
      * Sticker API - class to manage the calling and usage
      */
-
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Sticker {
-        public static String index;
-        public static String packs;
-        public static String pathVariableId;
-        public static String pathVariablePacksId;
+        @Setter
+        @Getter
+        private static String index;
+        @Setter
+        @Getter
+        private static String packs;
+        @Setter
+        @Getter
+        private static String pathVariableId;
+        @Setter
+        @Getter
+        private static String pathVariablePacksId;
     }
 
     /**
      * Upload API - class to manage the calling and usage
      */
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Upload {
-        public static String index;
+        @Setter
+        @Getter
+        private static String index;
     }
 
     @Setter
@@ -100,7 +139,10 @@ public abstract class ConfigurableProperties {
     @Setter
     protected boolean isUpload;
 
+    protected static final String WARNING_MESSAGE = "Some field is not correctly configured for host-api. Checking is required!";
+
     public List<Boolean> getAPIsPaths() {
         return Arrays.asList(isHost, isParticipants, isGift, isSticker, isUpload);
     }
+
 }

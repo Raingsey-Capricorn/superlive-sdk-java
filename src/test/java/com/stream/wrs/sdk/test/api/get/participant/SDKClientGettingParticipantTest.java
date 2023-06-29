@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Objects;
  * Project : superlive-sdk-java
  */
 @Log
-public class SDKClientGettingParticipantTest extends CommonTestConfig {
+class SDKClientGettingParticipantTest extends CommonTestConfig {
 
     /**
      *
@@ -26,17 +27,17 @@ public class SDKClientGettingParticipantTest extends CommonTestConfig {
     @Test
     @Order(1)
     @SneakyThrows
-    public void testVersion01_ParticipantsUsingSDKClientSimple() {
+    void testVersion01_ParticipantsUsingSDKClientSimple() {
 
         final SDKClient client = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build();
 
-        final HashMap<?, ?> version1_result =
+        final Map<?, ?> version1_result =
                 client.doGetRequest(
                         client,
-                        SDKClient.Participant.index);
+                        SDKClient.Participant.getIndex());
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version1_result).isEmpty()
@@ -48,7 +49,7 @@ public class SDKClientGettingParticipantTest extends CommonTestConfig {
     @Test
     @Order(2)
     @SneakyThrows
-    public void testVersion02_ParticipantsUsingSDKClientSimple() {
+    void testVersion02_ParticipantsUsingSDKClientSimple() {
 
         HashMap<?, ?> version2_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
@@ -66,13 +67,13 @@ public class SDKClientGettingParticipantTest extends CommonTestConfig {
     @Test
     @Order(3)
     @SneakyThrows
-    public void testVersion03__ParticipantsUsingSDKClientSimple() {
+    void testVersion03__ParticipantsUsingSDKClientSimple() {
 
         HashMap<?, ?> version3_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .buildApiParticipant()
-                .doGetRequest(SDKClient.Participant.index);
+                .doGetRequest(SDKClient.Participant.getIndex());
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version3_result).isEmpty()

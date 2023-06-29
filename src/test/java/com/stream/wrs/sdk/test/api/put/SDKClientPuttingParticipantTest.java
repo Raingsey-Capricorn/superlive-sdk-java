@@ -20,11 +20,11 @@ import java.util.Locale;
  */
 @Log
 @WebFluxTest
-public class SDKClientPuttingParticipantTest {
+class SDKClientPuttingParticipantTest {
 
     @SneakyThrows
     @Test
-    public void testVersion01_createAParticipants() {
+    void testVersion01_createAParticipants() {
 
         final SDKClient client = SDKClient.builder()
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
@@ -32,7 +32,7 @@ public class SDKClientPuttingParticipantTest {
 
         HashMap version1_result = client.doPostRequest(
                 client,
-                SDKClient.Participant.index,
+                SDKClient.Participant.getIndex(),
                 new HashMap() {{
                     put("name", RandomStringUtils.randomAlphabetic(5).toUpperCase(Locale.ROOT));
                     put("description", "Test host description");
@@ -44,13 +44,13 @@ public class SDKClientPuttingParticipantTest {
 
     @SneakyThrows
     @Test
-    public void testVersion02_PutANewHostUsingHashMapSetup() {
+    void testVersion02_PutANewHostUsingHashMapSetup() {
 
         HashMap version1_result = SDKClient.builder()
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build()
                 .doPostRequest(
-                        SDKClient.Participant.index,
+                        SDKClient.Participant.getIndex(),
                         new HashMap() {{
                             put("name", RandomStringUtils.randomAlphabetic(5).toUpperCase(Locale.ROOT));
                             put("description", "Test host description");
@@ -62,13 +62,13 @@ public class SDKClientPuttingParticipantTest {
 
     @SneakyThrows
     @Test
-    public void testVersion03_PutANewHostUsingHashMapSetup() {
+    void testVersion03_PutANewHostUsingHashMapSetup() {
 
         HashMap version1_result = SDKClient.builder()
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .buildApiParticipant()
                 .doPostRequest(
-                        SDKClient.Participant.index,
+                        SDKClient.Participant.getIndex(),
                         new HashMap() {{
                             put("name", RandomStringUtils.randomAlphabetic(5).toUpperCase(Locale.ROOT));
                             put("description", "Test host description");

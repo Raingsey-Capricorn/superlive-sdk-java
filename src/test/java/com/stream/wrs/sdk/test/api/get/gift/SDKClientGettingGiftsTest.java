@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -18,22 +19,22 @@ import java.util.Objects;
  * Project : superlive-sdk-java
  */
 @Log
-public class SDKClientGettingGiftsTest extends CommonTestConfig {
+class SDKClientGettingGiftsTest extends CommonTestConfig {
 
     @Test
     @Order(1)
     @SneakyThrows
-    public void testVersion01_GiftsUsingSDKClientSimple() {
+    void testVersion01_GiftsUsingSDKClientSimple() {
 
         final SDKClient client = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build();
 
-        final HashMap<?, ?> version1_result =
+        final Map<?, ?> version1_result =
                 client.doGetRequest(
                         client,
-                        SDKClient.Gift.index);
+                        SDKClient.Gift.getIndex());
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version1_result).isEmpty()
@@ -43,19 +44,19 @@ public class SDKClientGettingGiftsTest extends CommonTestConfig {
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     @SneakyThrows
-    public void testVersion01_GiftsPacksUsingSDKClientSimple() {
+    void testVersion01_GiftsPacksUsingSDKClientSimple() {
 
         final SDKClient client = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build();
 
-        final HashMap<?, ?> version1_result =
+        final Map<?, ?> version1_result =
                 client.doGetRequest(
                         client,
-                        SDKClient.Gift.packs);
+                        SDKClient.Gift.getPacks());
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version1_result).isEmpty()
@@ -67,7 +68,7 @@ public class SDKClientGettingGiftsTest extends CommonTestConfig {
     @Test
     @Order(3)
     @SneakyThrows
-    public void testVersion02_GiftsUsingSDKClientSimple() {
+    void testVersion02_GiftsUsingSDKClientSimple() {
 
         HashMap<?, ?> version2_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
@@ -85,7 +86,7 @@ public class SDKClientGettingGiftsTest extends CommonTestConfig {
     @Test
     @Order(4)
     @SneakyThrows
-    public void testVersion02_GiftsPacksUsingSDKClientSimple() {
+    void testVersion02_GiftsPacksUsingSDKClientSimple() {
 
         HashMap<?, ?> version2_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
@@ -103,13 +104,13 @@ public class SDKClientGettingGiftsTest extends CommonTestConfig {
     @Test
     @Order(5)
     @SneakyThrows
-    public void testVersion03_GiftsUsingSDKClientSimple() {
+    void testVersion03_GiftsUsingSDKClientSimple() {
 
         HashMap<?, ?> version3_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .buildApiGift()
-                .doGetRequest(SDKClient.Gift.index);
+                .doGetRequest(SDKClient.Gift.getIndex());
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version3_result).isEmpty()
@@ -121,13 +122,13 @@ public class SDKClientGettingGiftsTest extends CommonTestConfig {
     @Test
     @Order(6)
     @SneakyThrows
-    public void testVersion03_GiftsPacksUsingSDKClientSimple() {
+    void testVersion03_GiftsPacksUsingSDKClientSimple() {
 
         HashMap<?, ?> version3_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .buildApiGift()
-                .doGetRequest(SDKClient.Gift.packs);
+                .doGetRequest(SDKClient.Gift.getPacks());
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version3_result).isEmpty()

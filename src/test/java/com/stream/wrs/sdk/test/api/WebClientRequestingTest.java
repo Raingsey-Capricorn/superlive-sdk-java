@@ -28,7 +28,7 @@ class WebClientRequestingTest {
     private FileValueProvider fileProvider;
 
     @Test
-    public void testContext() {
+    void testContext() {
 
         boolean assertion = valueProvider != null
                 && !valueProvider.getSuperLiveHost().isEmpty()
@@ -42,7 +42,7 @@ class WebClientRequestingTest {
     }
 
     @Test
-    public void testGetAvailableHostUsingMerchantAuthorizationKey() {
+    void testGetAvailableHostUsingMerchantAuthorizationKey() {
 
         HashMap<?, ?> result = WebClient.create(valueProvider.getSuperLiveHost())
                 .get()
@@ -73,9 +73,9 @@ class WebClientRequestingTest {
         LOGGER.debug(result.toString());
     }
 
-    @Disabled
+    @Disabled("Testing is required when needed.")
     @Test
-    public void testGetOneHostInfoUsingMerchantAuthorizationKeyWithHostId() {
+    void testGetOneHostInfoUsingMerchantAuthorizationKeyWithHostId() {
 
         HashMap<?, ?> result = (HashMap<?, ?>) WebClient.create(valueProvider.getSuperLiveHost())
                 .get()
@@ -108,9 +108,8 @@ class WebClientRequestingTest {
         LOGGER.debug(result.toString());
     }
 
-    @Disabled
     @Test
-    public void testGetHostCountingAvailableUsingMerchantAuthorizationKey() {
+    void testGetHostCountingAvailableUsingMerchantAuthorizationKey() {
 
         HashMap<?, ?> result = (HashMap<?, ?>) WebClient.create(valueProvider.getEndpointHosts())
                 .get()
@@ -137,11 +136,11 @@ class WebClientRequestingTest {
 
     }
 
-    @Disabled
+    @Disabled("This test is apply when needed.")
     @Test
-    public void testPostANewHostUsingMerchantAuthorizationKey() {
+    void testPostANewHostUsingMerchantAuthorizationKey() {
 
-        final LinkedMultiValueMap valueMap = fileProvider.readJsonRequestBody("src/test/resources/sample-host-request-body.json");
+        final Map valueMap = fileProvider.readJsonRequestBodyAsMultiPartData("src/test/resources/sample-host-request-body.json");
 
         HashMap<?, ?> result = WebClient.create(valueProvider.getEndpointHosts())
                 .post()
@@ -153,7 +152,7 @@ class WebClientRequestingTest {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(valueProvider.getAccessAuthorizationKey(), valueProvider.getAccessAuthorization());
                 })
-                .body(BodyInserters.fromFormData(valueMap))
+                .body(BodyInserters.fromObject(valueMap))
                 .retrieve()
                 .bodyToMono(HashMap.class)
                 .block();
@@ -165,11 +164,11 @@ class WebClientRequestingTest {
         LOGGER.debug(result.toString());
     }
 
-    @Disabled
+    @Disabled("Testing is required when needed.")
     @Test
-    public void testPutAHostUsingHostIdMerchantAuthorizationKey() {
+    void testPutAHostUsingHostIdMerchantAuthorizationKey() {
 
-        final LinkedMultiValueMap valueMap = fileProvider.readJsonRequestBody("src/test/resources/sample-host-request-body.json");
+        final LinkedMultiValueMap valueMap = fileProvider.readJsonRequestBodyAsMultiPartData("src/test/resources/sample-host-request-body.json");
 
         HashMap<?, ?> result = WebClient.create(valueProvider.getSuperLiveHost())
                 .put()
@@ -196,9 +195,9 @@ class WebClientRequestingTest {
         LOGGER.debug(result.toString());
     }
 
-    @Disabled
+    @Disabled("Testing is required when needed.")
     @Test
-    public void testDeleteAHostUsingHostIdMerchantAuthorizationKey() {
+    void testDeleteAHostUsingHostIdMerchantAuthorizationKey() {
 
         HashMap<?, ?> result = WebClient.create(valueProvider.getSuperLiveHost())
                 .delete()

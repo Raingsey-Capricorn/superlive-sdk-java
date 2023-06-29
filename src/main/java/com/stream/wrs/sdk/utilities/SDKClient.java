@@ -13,6 +13,8 @@ import org.springframework.web.util.UriBuilder;
 import java.net.URI;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.logging.Level;
 
@@ -31,17 +33,37 @@ import java.util.logging.Level;
  */
 @Log
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SDKClient extends ConfigurableProperties implements SDKWebClientAction {
-    private static SDKClient INSTANCE;
+public final class SDKClient extends ConfigurableProperties implements SDKWebClientAction {
+    private static final SDKClient INSTANCE;
+
+    static {
+        INSTANCE = new SDKClient();
+        Host.setIndex("/hosts");
+        Host.setCount("/hosts/count");
+        Host.setPathVariableId("/hosts/{id}");
+        Participant.setIndex("/participants");
+        Participant.setPathVariableId("/participants/{id}");
+        Participant.setGiftPoints("/participants/{id}/credit/gift-point");
+        Gift.setIndex("/gifts");
+        Gift.setPacks("/gifts/packs");
+        Gift.setPathVariableId("/gifts/{id}");
+        Gift.setPathVariablePacksId("/gifts/packs/{id}");
+        Sticker.setIndex("/stickers");
+        Sticker.setPacks("/stickers/packs");
+        Sticker.setPathVariableId("/stickers/{id}");
+        Sticker.setPathVariablePacksId("/stickers/packs/{id}");
+        Upload.setIndex("/upload/file");
+    }
 
     /**
      * Initialize default values for the fields
      * All these field can be customized as preference
+     * s
      *
      * @return a singleton instance
      */
     public static SDKClient builder() {
-        INSTANCE = new SDKClient();
+
         INSTANCE.merchantHostId = null;
         INSTANCE.accessAuthorization = null;
         INSTANCE.endpointHosts = "/hosts";
@@ -54,21 +76,6 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
         INSTANCE.endpointParticipantsPathVariable = INSTANCE.endpointParticipants + "/{id}";
         INSTANCE.superLiveHost = "http://merch.sp.tv/api/server-sdk";
 
-        Host.index = "/hosts";
-        Host.count = "/hosts/count";
-        Host.pathVariableId = "/hosts/{id}}";
-        Participant.index = "/participants";
-        Participant.pathVariableId = "/participants/{id}";
-        Participant.giftPoints = "/participants/{id}/credit/gift-point";
-        Gift.index = "/gifts";
-        Gift.packs = "/gifts/packs";
-        Gift.pathVariableId = "/gifts/{id}";
-        Gift.pathVariablePacksId = "/gifts/packs/{id}";
-        Sticker.index = "/stickers";
-        Sticker.packs = "/stickers/packs";
-        Sticker.pathVariableId = "/stickers/{id}";
-        Sticker.pathVariablePacksId = "/stickers/packs/{id}";
-        Upload.index = "/upload/file";
         return INSTANCE;
     }
 
@@ -105,7 +112,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
         ) {
             return INSTANCE;
         } else {
-            log.info("Some field is not correctly configured for host-api. Checking is required!");
+            log.info(ConfigurableProperties.WARNING_MESSAGE);
             return INSTANCE;
         }
 
@@ -119,7 +126,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
         ) {
             return INSTANCE;
         } else {
-            log.info("Some field is not correctly configured for host-api. Checking is required!");
+            log.info(ConfigurableProperties.WARNING_MESSAGE);
             return INSTANCE;
         }
     }
@@ -132,7 +139,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
         ) {
             return INSTANCE;
         } else {
-            log.info("Some field is not correctly configured for host-api. Checking is required!");
+            log.info(ConfigurableProperties.WARNING_MESSAGE);
             return INSTANCE;
         }
     }
@@ -145,7 +152,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
         ) {
             return INSTANCE;
         } else {
-            log.info("Some field is not correctly configured for host-api. Checking is required!");
+            log.info(ConfigurableProperties.WARNING_MESSAGE);
             return INSTANCE;
         }
     }
@@ -158,7 +165,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
         ) {
             return INSTANCE;
         } else {
-            log.info("Some field is not correctly configured for host-api. Checking is required!");
+            log.info(ConfigurableProperties.WARNING_MESSAGE);
             return INSTANCE;
         }
     }
@@ -176,42 +183,6 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
 
     public SDKClient superLiveHost(final String superLiveHost) {
         this.superLiveHost = superLiveHost;
-        return INSTANCE;
-    }
-
-    /**
-     * @param endpointHosts
-     * @return
-     */
-    private SDKClient endpointHosts(final String endpointHosts) {
-        this.endpointHosts = endpointHosts;
-        return INSTANCE;
-    }
-
-    /**
-     * @param endpointCounting
-     * @return
-     */
-    public SDKClient endpointCounting(final String endpointCounting) {
-        this.endpointCounting = endpointCounting;
-        return INSTANCE;
-    }
-
-    /**
-     * @param endpointPathVariable
-     * @return
-     */
-    public SDKClient endpointPathVariable(final String endpointPathVariable) {
-        this.endpointHostPathVariable = endpointPathVariable;
-        return INSTANCE;
-    }
-
-    /**
-     * @param endpointParticipants
-     * @return
-     */
-    private SDKClient endpointParticipants(final String endpointParticipants) {
-        this.endpointParticipants = endpointParticipants;
         return INSTANCE;
     }
 
@@ -274,17 +245,14 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
                 .filters(SDKWebClientBuilder.exchangeRequestFilters())
                 .build()
                 .get()
-                .uri((uriBuilder) -> uriBuilder.path(requestURI).build()).headers((httpHeaders) -> {
+                .uri(uriBuilder -> uriBuilder.path(requestURI).build()).headers(httpHeaders -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
                 })
                 .exchange()
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(map -> {
-                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
-                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
-                })
+                .doOnSuccess(SDKWebClientBuilder.logMessageOnSuccess())
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
@@ -298,52 +266,56 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
                 .build()
                 .get()
                 .uri(uriBuilderFunction)
-                .headers((httpHeaders) -> {
+                .headers(httpHeaders -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
                 })
                 .exchange()
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(map -> {
-                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
-                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
-                })
+                .doOnSuccess(SDKWebClientBuilder.logMessageOnSuccess())
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     @Override
     public HashMap<?, ?> doGetRequest(final String requestURI) {
 
-        return SDKWebClientBuilder.buildAPIPathForHttpGet(requestURI, null, this.getAPIsPaths(), superLiveHost)
-                .headers((httpHeaders) -> {
+        return SDKWebClientBuilder.buildAPIPathForHttpGet(Optional.of(requestURI), Optional.empty(), this.getAPIsPaths(), superLiveHost)
+                .headers(httpHeaders -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(this.getAccessAuthorizationKey(), this.getAccessAuthorization());
                 })
                 .exchange()
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(map -> {
-                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
-                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
-                })
+                .doOnSuccess(SDKWebClientBuilder.logMessageOnSuccess())
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     @Override
     public HashMap<?, ?> doGetRequest(final String requestURI,
                                       final Function<UriBuilder, URI> uriBuilderFunction) {
-        return SDKWebClientBuilder.buildAPIPathForHttpGet(requestURI, uriBuilderFunction, this.getAPIsPaths(), superLiveHost).headers((httpHeaders) -> {
+        return SDKWebClientBuilder.buildAPIPathForHttpGet(Optional.ofNullable(requestURI), Optional.of(uriBuilderFunction), this.getAPIsPaths(), superLiveHost).headers(httpHeaders -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(this.getAccessAuthorizationKey(), this.getAccessAuthorization());
                 })
                 .exchange()
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(map -> {
-                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
-                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
+                .doOnSuccess(SDKWebClientBuilder.logMessageOnSuccess())
+                .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
+    }
+
+    @Override
+    public HashMap<?, ?> doGetRequest(final Function<UriBuilder, URI> uriBuilderFunction) {
+        return SDKWebClientBuilder.buildAPIPathForHttpGet(Optional.empty(), Optional.of(uriBuilderFunction), this.getAPIsPaths(), superLiveHost).headers(httpHeaders -> {
+                    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+                    httpHeaders.add(this.getAccessAuthorizationKey(), this.getAccessAuthorization());
                 })
+                .exchange()
+                .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
+                .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
+                .doOnSuccess(SDKWebClientBuilder.logMessageOnSuccess())
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
@@ -351,7 +323,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
     @SneakyThrows
     public HashMap<?, ?> doPostRequest(final SDKClient sdkClient,
                                        final String uri,
-                                       final HashMap requestDataMap) {
+                                       final Map requestDataMap) {
 
         return WebClient.builder()
                 .baseUrl(sdkClient.getSuperLiveHost())
@@ -367,16 +339,13 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
                 .exchange()
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(map -> {
-                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
-                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
-                })
+                .doOnSuccess(SDKWebClientBuilder.logMessageOnSuccess())
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     @Override
     public HashMap<?, ?> doPostRequest(final String requestURI,
-                                       final HashMap requestDataMap) {
+                                       final Map requestDataMap) {
 
         return SDKWebClientBuilder.buildAPIPathForHttpPost(requestURI, this.getAPIsPaths(), superLiveHost)
                 .headers(httpHeaders -> {
@@ -387,10 +356,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
                 .exchange()
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(map -> {
-                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
-                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
-                })
+                .doOnSuccess(SDKWebClientBuilder.logMessageOnSuccess())
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
@@ -398,7 +364,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
     public HashMap<?, ?> doPutRequest(final SDKClient sdkClient,
                                       final String requestURI,
                                       final String id,
-                                      final HashMap requestDataMap) {
+                                      final Map requestDataMap) {
 
         return WebClient.builder()
                 .baseUrl(sdkClient.getSuperLiveHost())
@@ -417,17 +383,14 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
                 .exchange()
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(map -> {
-                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
-                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
-                })
+                .doOnSuccess(SDKWebClientBuilder.logMessageOnSuccess())
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
     @Override
     public HashMap<?, ?> doPutRequest(final String requestURI,
                                       final String id,
-                                      final HashMap requestDataMap) {
+                                      final Map requestDataMap) {
 
         return SDKWebClientBuilder.buildAPIPathForHttpPut(requestURI, id, getAPIsPaths(), superLiveHost)
                 .headers(httpHeaders -> {
@@ -438,10 +401,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
                 .exchange()
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(map -> {
-                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
-                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
-                })
+                .doOnSuccess(SDKWebClientBuilder.logMessageOnSuccess())
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
@@ -465,10 +425,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
                 .exchange()
                 .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
-                .doOnSuccess(map -> {
-                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
-                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
-                })
+                .doOnSuccess(SDKWebClientBuilder.logMessageOnSuccess())
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
@@ -483,10 +440,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
                 .exchange()
                 .flatMap(clientResponse -> clientResponse.bodyToMono(HashMap.class))
                 .doOnError(throwable -> log.log(Level.FINER, throwable.getCause().getMessage()))
-                .doOnSuccess(map -> {
-                    log.log(Level.INFO, String.format("Response status : %s", map.get("statusCode")));
-                    log.log(Level.INFO, String.format("Response data : %s", map.get("data")));
-                })
+                .doOnSuccess(SDKWebClientBuilder.logMessageOnSuccess())
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 }

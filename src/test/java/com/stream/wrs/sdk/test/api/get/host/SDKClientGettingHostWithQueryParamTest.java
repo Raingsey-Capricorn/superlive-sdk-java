@@ -1,5 +1,6 @@
 package com.stream.wrs.sdk.test.api.get.host;
 
+import com.stream.wrs.sdk.config.ConfigurableProperties;
 import com.stream.wrs.sdk.test.CommonTestConfig;
 import com.stream.wrs.sdk.utilities.SDKClient;
 import com.stream.wrs.sdk.utilities.SDKWebClientBuilder;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -21,7 +23,7 @@ import java.util.Optional;
  * This Test case is to ensure consistency between version of the SDKClient API
  */
 @Log
-public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
+class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
 
     /**
      *
@@ -29,14 +31,14 @@ public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
     @Test
     @Order(1)
     @SneakyThrows
-    public void testVersion01_GetHostUsingSDKClientWithQueryParam() {
+    void testVersion01_GetHostUsingSDKClientWithQueryParam() {
 
         final SDKClient client = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build();
 
-        final HashMap<?, ?> version1_result =
+        final Map<?, ?> version1_result =
                 client.doGetRequest(
                         client,
                         SDKWebClientBuilder.buildHttpGetURI(
@@ -62,7 +64,7 @@ public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
     @Test
     @Order(2)
     @SneakyThrows
-    public void testVersion02_GetHostUsingSDKClientWithQueryParam() {
+    void testVersion02_GetHostUsingSDKClientWithQueryParam() {
 
         HashMap<?, ?> version2_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
@@ -85,13 +87,35 @@ public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
         );
     }
 
+    @Test
+    @Order(3)
+    @SneakyThrows
+    void testVersion02_GetAHostUsingSDKClientWithId() {
+
+        HashMap<?, ?> version2_result = SDKClient.builder()
+                .merchantHostId("648a77d088c133b4c4b96f8a")
+                .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
+                .build()
+                .doGetRequest("http://merch.sp.tv/api/server-sdk/hosts",
+                        SDKWebClientBuilder.buildHttpGetURI(
+                                Optional.of("/{id}"),
+                                "64896031ae40c3255a3e8e95"
+                        ));
+
+        Assertions.assertTrue(
+                !Objects.requireNonNull(version2_result).isEmpty()
+                        && version2_result.containsKey("data")
+                        && version2_result.get("data") != null
+        );
+    }
+
     /**
      *
      */
     @Test
     @Order(3)
     @SneakyThrows
-    public void testVersion03_GetHostUsingSDKClientWithQueryParam() {
+    void testVersion03_GetHostUsingSDKClientWithQueryParam() {
 
         HashMap<?, ?> version3_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
@@ -111,6 +135,27 @@ public class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
                 !Objects.requireNonNull(version3_result).isEmpty()
                         && version3_result.containsKey("data")
                         && version3_result.get("data") != null
+        );
+    }
+
+    @Test
+    @Order(4)
+    @SneakyThrows
+    void testVersion04_GetAHostUsingSDKClientWithId() {
+
+        HashMap<?, ?> version2_result = SDKClient.builder()
+                .merchantHostId("648a77d088c133b4c4b96f8a")
+                .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
+                .buildApiHost()
+                .doGetRequest(SDKWebClientBuilder.buildHttpGetURI(
+                        Optional.of(ConfigurableProperties.Host.getPathVariableId()),
+                        "64896031ae40c3255a3e8e95"
+                ));
+
+        Assertions.assertTrue(
+                !Objects.requireNonNull(version2_result).isEmpty()
+                        && version2_result.containsKey("data")
+                        && version2_result.get("data") != null
         );
     }
 

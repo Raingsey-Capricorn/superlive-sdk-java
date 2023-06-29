@@ -18,7 +18,7 @@ import java.util.Objects;
  * Project : superlive-sdk-java
  */
 @Log
-public class SDKClientGettingStickerTest extends CommonTestConfig {
+class SDKClientGettingStickerTest extends CommonTestConfig {
 
     /**
      *
@@ -26,7 +26,7 @@ public class SDKClientGettingStickerTest extends CommonTestConfig {
     @Test
     @Order(1)
     @SneakyThrows
-    public void testVersion01_StickersUsingSDKClientSimple() {
+    void testVersion01_StickersUsingSDKClientSimple() {
 
         final SDKClient client = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
@@ -36,7 +36,7 @@ public class SDKClientGettingStickerTest extends CommonTestConfig {
         final HashMap<?, ?> version1_result =
                 client.doGetRequest(
                         client,
-                        SDKClient.Sticker.index);
+                        SDKClient.Sticker.getIndex());
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version1_result).isEmpty()
@@ -44,10 +44,11 @@ public class SDKClientGettingStickerTest extends CommonTestConfig {
                         && version1_result.get("data") != null
         );
     }
+
     @Test
     @Order(2)
     @SneakyThrows
-    public void testVersion01_StickersPacksUsingSDKClientSimple() {
+    void testVersion01_StickersPacksUsingSDKClientSimple() {
 
         final SDKClient client = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
@@ -57,7 +58,7 @@ public class SDKClientGettingStickerTest extends CommonTestConfig {
         final HashMap<?, ?> version1_result =
                 client.doGetRequest(
                         client,
-                        SDKClient.Sticker.packs);
+                        SDKClient.Sticker.getPacks());
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version1_result).isEmpty()
@@ -65,10 +66,11 @@ public class SDKClientGettingStickerTest extends CommonTestConfig {
                         && version1_result.get("data") != null
         );
     }
+
     @Test
     @Order(3)
     @SneakyThrows
-    public void testVersion02_StickersUsingSDKClientSimple() {
+    void testVersion02_StickersUsingSDKClientSimple() {
 
         HashMap<?, ?> version2_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
@@ -82,10 +84,11 @@ public class SDKClientGettingStickerTest extends CommonTestConfig {
                         && version2_result.get("data") != null
         );
     }
+
     @Test
     @Order(4)
     @SneakyThrows
-    public void testVersion02_StickersPacksUsingSDKClientSimple() {
+    void testVersion02_StickersPacksUsingSDKClientSimple() {
 
         HashMap<?, ?> version2_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
@@ -103,13 +106,13 @@ public class SDKClientGettingStickerTest extends CommonTestConfig {
     @Test
     @Order(5)
     @SneakyThrows
-    public void testVersion03_StickersUsingSDKClientSimple() {
+    void testVersion03_StickersUsingSDKClientSimple() {
 
         HashMap<?, ?> version3_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .buildApiSticker()
-                .doGetRequest(SDKClient.Sticker.index);
+                .doGetRequest(SDKClient.Sticker.getIndex());
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version3_result).isEmpty()
@@ -117,16 +120,17 @@ public class SDKClientGettingStickerTest extends CommonTestConfig {
                         && version3_result.get("data") != null
         );
     }
+
     @Test
-    @Order(5)
+    @Order(6)
     @SneakyThrows
-    public void testVersion03_StickersPacksUsingSDKClientSimple() {
+    void testVersion03_StickersPacksUsingSDKClientSimple() {
 
         HashMap<?, ?> version3_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .buildApiSticker()
-                .doGetRequest(SDKClient.Sticker.packs);
+                .doGetRequest(SDKClient.Sticker.getPacks());
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version3_result).isEmpty()

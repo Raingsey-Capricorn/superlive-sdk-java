@@ -1,6 +1,5 @@
 package com.stream.wrs.sdk.model.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -13,13 +12,12 @@ import java.util.List;
  */
 @Data
 public class HostRequestBody {
-    public String name;
-    public String description;
-    public String username;
-    public String password;
-    public List<String> giftPacks;
-    public List<String> stickerPacks;
-    @JsonProperty("isChatEnabled")
-    public boolean isChatEnabled;
+    private String name;
+    private String description;
+    private String username;
+    private String password;
+    private List<String> giftPacks;
+    private List<String> stickerPacks;
+    private boolean isChatEnabled;
 
 }

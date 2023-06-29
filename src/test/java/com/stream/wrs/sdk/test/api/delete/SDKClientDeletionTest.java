@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -20,13 +20,13 @@ import java.util.Objects;
  */
 
 @Log
-public class SDKClientDeletionTest extends CommonTestConfig {
+class SDKClientDeletionTest extends CommonTestConfig {
 
     @Test
     @Order(1)
-    @Disabled
+    @Disabled(value = "Apply only existing ID to test this SDK")
     @SneakyThrows
-    public void testVersion01_deletingAHostUsingHostId() {
+    void testVersion01_deletingAHostUsingHostId() {
 
         final SDKClient client = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
@@ -34,7 +34,7 @@ public class SDKClientDeletionTest extends CommonTestConfig {
                 .build();
 
         //This ID has already deleted, so when running just give another existing host-id to delete
-        final HashMap<?, ?> version1_result =
+        final Map<?, ?> version1_result =
                 client.doDeleteRequest(
                         client,
                         "6488327a96bc8514776f5a41"
@@ -50,11 +50,11 @@ public class SDKClientDeletionTest extends CommonTestConfig {
 
     @Test
     @Order(2)
-    @Disabled
+    @Disabled(value = "Apply only existing ID to test this SDK")
     @SneakyThrows
-    public void testVersion02_deletingAHostUsingHostId() {
+    void testVersion02_deletingAHostUsingHostId() {
 
-        final HashMap version1_result = SDKClient.builder()
+        final Map version1_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build()
@@ -72,11 +72,11 @@ public class SDKClientDeletionTest extends CommonTestConfig {
 
     @Test
     @Order(3)
-    @Disabled
+    @Disabled(value = "Apply only existing ID to test this SDK")
     @SneakyThrows
-    public void testVersion03_deletingAHostUsingHostId() {
+    void testVersion03_deletingAHostUsingHostId() {
 
-        final HashMap version1_result = SDKClient.builder()
+        final Map version1_result = SDKClient.builder()
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .buildApiHost()

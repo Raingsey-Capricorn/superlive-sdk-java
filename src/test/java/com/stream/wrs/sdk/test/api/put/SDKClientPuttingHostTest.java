@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Author  : pisethraringsey.suon
@@ -22,17 +23,17 @@ import java.util.Locale;
  */
 @Log
 @SpringBootTest
-public class SDKClientPuttingHostTest {
+class SDKClientPuttingHostTest {
 
     @Autowired
     FileValueProvider fileProvider;
 
     @SneakyThrows
     @Test
-    public void testVersion01_PutANewHostUsingFileReaderFromJsonData() {
+    void testVersion01_PutANewHostUsingFileReaderFromJsonData() {
 
         //The username is unique, so before running the test, make sure to change username value
-        final HashMap valueMap =
+        final Map valueMap =
                 fileProvider.readJsonRequestBodyAsMultiPartData("src/test/resources/sample-host-request-body.json");
 
         final SDKClient client = SDKClient.builder()
@@ -52,7 +53,7 @@ public class SDKClientPuttingHostTest {
 
     @SneakyThrows
     @Test
-    public void testVersion01_PutANewHostUsingHashMapSetup() {
+    void testVersion01_PutANewHostUsingHashMapSetup() {
 
 
         final SDKClient client = SDKClient.builder()
@@ -80,13 +81,13 @@ public class SDKClientPuttingHostTest {
 
     @SneakyThrows
     @Test
-    public void testVersion02_PutANewHostUsingHashMapSetup() {
+    void testVersion02_PutANewHostUsingHashMapSetup() {
 
         HashMap version1_result = SDKClient.builder()
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .build()
                 .doPutRequest(
-                        SDKClient.Host.pathVariableId,
+                        SDKClient.Host.getPathVariableId(),
                         "649566c41f37fc99fb8de30b",
                         new HashMap() {{
                             put("name", "SampleHost" + RandomStringUtils.randomAlphabetic(5).toUpperCase(Locale.ROOT));
@@ -104,7 +105,7 @@ public class SDKClientPuttingHostTest {
 
     @SneakyThrows
     @Test
-    public void testVersion03_PutANewHostUsingHashMapSetup() {
+    void testVersion03_PutANewHostUsingHashMapSetup() {
 
         HashMap version1_result = SDKClient.builder()
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")

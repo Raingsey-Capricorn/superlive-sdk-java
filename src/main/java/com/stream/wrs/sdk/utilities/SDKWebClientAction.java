@@ -4,6 +4,7 @@ import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -47,7 +48,7 @@ public interface SDKWebClientAction {
      * <br/>
      *
      * @param requestURI         : the uri appending to the APi's uri
-     * @param uriBuilderFunction :fully customized uri
+     * @param uriBuilderFunction :fully customized uri (path variable and query param capabilities)
      * @return HashMap<?, ?> content result content as Json :
      * <br/>{
      * "statusCode": xxx,
@@ -58,6 +59,25 @@ public interface SDKWebClientAction {
     HashMap<?, ?> doGetRequest(final String requestURI, final Function<UriBuilder, URI> uriBuilderFunction);
 
     /**
+     * This method is strickly
+     * used with SDKClient.builder()
+     * <br/><br/><strong>Usage</strong>:
+     * <code>
+     * <br/>- SDKClient<br/>.builder()<br/>.buildXXXXXAPI()...<br/>.doGetRequest(final String requestURI, final Function<UriBuilder, URI> uriBuilderFunction)
+     * </code>
+     * <br/>
+     *
+     * @param uriBuilderFunction :fully customized uri (path variable and query param capabilities)
+     * @return HashMap<?, ?> content result content as Json :
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * @see Function<UriBuilder, URI>
+     */
+    HashMap<?, ?> doGetRequest(final Function<UriBuilder, URI> uriBuilderFunction);
+
+    /**
      * @param sdkClient
      * @param requestURI
      * @return
@@ -66,7 +86,7 @@ public interface SDKWebClientAction {
 
     /**
      * @param sdkClient
-     * @param uriBuilderFunction
+     * @param uriBuilderFunction :fully customized uri (path variable and query param capabilities)
      * @return
      */
     HashMap<?, ?> doGetRequest(final SDKClient sdkClient,
@@ -80,7 +100,7 @@ public interface SDKWebClientAction {
      */
     HashMap<?, ?> doPostRequest(final SDKClient sdkClient,
                                 final String baseURL,
-                                final HashMap requestDataMap);
+                                final Map<?, ?> requestDataMap);
 
     /**
      * This method is strickly
@@ -101,7 +121,7 @@ public interface SDKWebClientAction {
      *                       }
      */
     HashMap<?, ?> doPostRequest(final String requestURI,
-                                final HashMap requestDataMap);
+                                final Map<?, ?> requestDataMap);
 
     /**
      * @param sdkClient
@@ -113,7 +133,7 @@ public interface SDKWebClientAction {
     HashMap<?, ?> doPutRequest(final SDKClient sdkClient,
                                final String requestURI,
                                final String id,
-                               final HashMap requestDataMap);
+                               final Map<?, ?> requestDataMap);
 
 
     /**
@@ -138,7 +158,7 @@ public interface SDKWebClientAction {
      */
     HashMap<?, ?> doPutRequest(final String requestURI,
                                final String id,
-                               final HashMap requestDataMap);
+                               final Map<?, ?> requestDataMap);
 
     /**
      * @param sdkClient

@@ -10,10 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Project : superlive-sdk-java
  */
 @SpringBootApplication
-public class StreamSDKApplication  {
+public class StreamSDKApplication {
 
     /**
-     * @param strings
+     * @param strings : main class arguments
      */
     public static void main(String... strings) {
         SpringApplication.run(StreamSDKApplication.class, strings);
