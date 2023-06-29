@@ -297,7 +297,7 @@ public class SDKClient extends ConfigurableProperties implements SDKWebClientAct
                 .filters(SDKWebClientBuilder.exchangeRequestFilters())
                 .build()
                 .get()
-                .uri(uriBuilderFunction::apply)
+                .uri(uriBuilderFunction)
                 .headers((httpHeaders) -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(sdkClient.getAccessAuthorizationKey(), sdkClient.getAccessAuthorization());
