@@ -13,7 +13,7 @@ import java.util.List;
  * Project : superlive-sdk-java
  */
 @Getter
-public abstract class ConfigurationProperties {
+public abstract class ConfigurableProperties {
 
     public enum ApiPath {
         HOST("/hosts"),

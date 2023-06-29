@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class EnvValueProvider extends ConfigurationProperties {
+public class EnvValueProvider extends ConfigurableProperties {
 
     @Value("${config.superlive.auth-value}")
     private void accessAuthorization(String accessAuthorization) {

@@ -1,6 +1,6 @@
 package com.stream.wrs.sdk.utilities;
 
-import com.stream.wrs.sdk.config.ConfigurationProperties;
+import com.stream.wrs.sdk.config.ConfigurableProperties;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -31,7 +31,7 @@ import java.util.logging.Level;
  */
 @Log
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SDKClient extends ConfigurationProperties implements SDKWebClientAction {
+public class SDKClient extends ConfigurableProperties implements SDKWebClientAction {
     private static SDKClient INSTANCE;
 
     /**

@@ -1,12 +1,10 @@
 package com.stream.wrs.sdk.test.api.get.sticker;
 
-import com.stream.wrs.sdk.config.ConfigurationProperties;
 import com.stream.wrs.sdk.test.CommonTestConfig;
 import com.stream.wrs.sdk.utilities.SDKClient;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 

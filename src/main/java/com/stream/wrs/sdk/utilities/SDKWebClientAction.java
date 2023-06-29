@@ -30,15 +30,29 @@ public interface SDKWebClientAction {
      * </code>
      * <br/>
      *
-     * @param requestURI : the
+     * @param requestURI : the requestURI
      * @return HashMap<?, ?> content result content as Json :
      */
     HashMap<?, ?> doGetRequest(final String requestURI);
 
     /**
+     * This method is strickly
+     * used with SDKClient.builder()
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * <br/><br/><strong>Usage</strong>:
+     * <code>
+     * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doGetRequest(final String requestURI, final Function<UriBuilder, URI> uriBuilderFunction)
+     * <br/>
+     * <br/>- SDKClient<br/>.builder()<br/>.buildXXXXXAPI()...<br/>.doGetRequest(final String requestURI, final Function<UriBuilder, URI> uriBuilderFunction)
+     * </code>
+     * <br/>
+     *
      * @param requestURI
      * @param uriBuilderFunction
-     * @return
+     * @return HashMap<?, ?> content result content as Json :
      */
     HashMap<?, ?> doGetRequest(final String requestURI, final Function<UriBuilder, URI> uriBuilderFunction);
 
@@ -100,11 +114,26 @@ public interface SDKWebClientAction {
                                final String id,
                                final HashMap requestDataMap);
 
+
     /**
+     * This method is strickly
+     * used with SDKClient.builder()
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * <br/><br/><strong>Usage</strong>:
+     * <code>
+     * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doPutRequest(final String requestURI, final String id, final HashMap requestDataMap)
+     * <br/>
+     * <br/>- SDKClient<br/>.builder()<br/>.buildXXXXXAPI()...<br/>.doPutRequest(final String requestURI, final String id, final HashMap requestDataMap)
+     * </code>
+     * <br/>
+     *
      * @param requestURI
      * @param id
      * @param requestDataMap
-     * @return
+     * @return HashMap<?, ?> content result content as Json :
      */
     HashMap<?, ?> doPutRequest(final String requestURI,
                                final String id,
@@ -120,10 +149,23 @@ public interface SDKWebClientAction {
                                   final String id);
 
     /**
+     * This method is strickly
+     * used with SDKClient.builder()
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * <br/><br/><strong>Usage</strong>:
+     * <code>
+     * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doDeleteRequest(final String requestURI, final String id)
+     * <br/>
+     * <br/>- SDKClient<br/>.builder()<br/>.buildXXXXXAPI()...<br/>.doDeleteRequest(final String requestURI, final String id))
+     * </code>
+     * <br/>
      *
      * @param requestURI
      * @param id
-     * @return
+     * @return HashMap<?, ?> content result content as Json :
      */
     HashMap<?, ?> doDeleteRequest(final String requestURI,
                                   final String id);
