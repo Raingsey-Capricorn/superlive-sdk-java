@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 @Log
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class SDKWebClientBuilder {
+
     public static final Integer FQDN = 1;
     public static final Integer PATH = 2;
     private static final String FQDN_PATTERN = "^((http|https)://).(((\\d{0,3}).(\\d{0,3}).(\\d{0,3}).(\\d{0,3}):\\d{1,10}/api/)|([a-z.]*/api/))";
@@ -132,8 +133,8 @@ public abstract class SDKWebClientBuilder {
     }
 
     /**
-     * @param fqdn
-     * @param uriBuilderFunction
+     * @param fqdn               :
+     * @param uriBuilderFunction :
      * @return
      */
     private static WebClient.RequestHeadersSpec<?> buildHttpGetURI(
@@ -152,8 +153,9 @@ public abstract class SDKWebClientBuilder {
     }
 
     /**
-     * @param fqdn
-     * @param path
+     * @param fqdn               :
+     * @param path               :
+     * @param uriBuilderFunction :
      * @return
      */
     private static WebClient.RequestHeadersSpec<?> buildHttpGetURI(
@@ -173,8 +175,8 @@ public abstract class SDKWebClientBuilder {
     }
 
     /**
-     * @param fqdn
-     * @param path
+     * @param fqdn :
+     * @param path :
      * @return
      */
     private static WebClient.RequestBodySpec buildHttpPostURI(
@@ -190,7 +192,7 @@ public abstract class SDKWebClientBuilder {
     }
 
     /**
-     * @param fqdn
+     * @param fqdn :
      * @return
      */
     public static WebClient.RequestBodySpec buildHttpPostURI(
@@ -208,8 +210,8 @@ public abstract class SDKWebClientBuilder {
     }
 
     /**
-     * @param id
-     * @param fqdn
+     * @param id   :
+     * @param fqdn :
      * @return
      */
 
@@ -229,9 +231,9 @@ public abstract class SDKWebClientBuilder {
     }
 
     /**
-     * @param superliveHost
-     * @param id
-     * @param path
+     * @param superliveHost :
+     * @param id            :
+     * @param path          :
      * @return
      */
     private static WebClient.RequestBodySpec buildHttpPutURI(
@@ -251,9 +253,9 @@ public abstract class SDKWebClientBuilder {
     }
 
     /**
-     * @param superliveHost
-     * @param id
-     * @param path
+     * @param superliveHost :
+     * @param id            :
+     * @param path          :
      * @return
      */
     private static WebClient.RequestHeadersSpec<?> buildHttpDeleteURI(
@@ -273,8 +275,8 @@ public abstract class SDKWebClientBuilder {
     }
 
     /**
-     * @param id
-     * @param fqdn
+     * @param id   :
+     * @param fqdn :
      * @return
      */
     private static WebClient.RequestHeadersSpec<?> buildHttpDeleteURI(
@@ -294,10 +296,10 @@ public abstract class SDKWebClientBuilder {
 
 
     /**
-     * @param uri
-     * @param uriBuilderFunction
-     * @param booleanList
-     * @param superLiveHost
+     * @param uri                :
+     * @param uriBuilderFunction :
+     * @param booleanList        :
+     * @param superLiveHost      :
      * @return
      */
     public static WebClient.RequestHeadersSpec<?> buildAPIPathForHttpGet(
@@ -323,9 +325,9 @@ public abstract class SDKWebClientBuilder {
     }
 
     /**
-     * @param uri
-     * @param booleanList
-     * @param superLiveHost
+     * @param uri           :
+     * @param booleanList   :
+     * @param superLiveHost :
      * @return
      */
     public static WebClient.RequestBodySpec buildAPIPathForHttpPost(
@@ -350,10 +352,10 @@ public abstract class SDKWebClientBuilder {
     }
 
     /**
-     * @param uri
-     * @param id
-     * @param booleanList
-     * @param superLiveHost
+     * @param uri           :
+     * @param id            :
+     * @param booleanList   :
+     * @param superLiveHost :
      * @return
      */
     public static WebClient.RequestBodySpec buildAPIPathForHttpPut(
@@ -379,10 +381,10 @@ public abstract class SDKWebClientBuilder {
     }
 
     /**
-     * @param uri
-     * @param id
-     * @param booleanList
-     * @param superLiveHost
+     * @param uri           :
+     * @param id            :
+     * @param booleanList   :
+     * @param superLiveHost :
      * @return
      */
     public static WebClient.RequestHeadersSpec<?> buildAPIPathForHttpDelete(
@@ -409,8 +411,8 @@ public abstract class SDKWebClientBuilder {
 
 
     /**
-     * @param uri
-     * @param apiPath
+     * @param uri     :
+     * @param apiPath :
      * @return
      */
     @SneakyThrows
@@ -429,7 +431,7 @@ public abstract class SDKWebClientBuilder {
         return exchangeFilterFunctions ->
                 exchangeFilterFunctions.add((clientRequest, next) -> {
                     clientRequest.headers().forEach((name, values) -> log.log(Level.INFO, String.format("%s : %s", name, values)));
-                    log.log(Level.INFO, String.format("Request URL : %s", clientRequest.url()));
+                    log.log(Level.INFO, String.format("Request: '%3s' to %3s", clientRequest.method(), clientRequest.url()));
                     return next.exchange(clientRequest);
                 });
     }

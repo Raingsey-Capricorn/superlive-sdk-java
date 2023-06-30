@@ -241,9 +241,23 @@ public final class SDKClient extends ConfigurableProperties implements SDKWebCli
         return INSTANCE;
     }
 
+    /**
+     * @param sdkClient  : sdkClient's instance
+     * @param requestURI : the uri appending to the APi's uri
+     * @return HashMap<?, ?> content result content as Json :
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * @deprecated As of superlive-sdk-java 1.0-SNAPSHOT
+     * because of using SDKClient instance separately,
+     * It's recommended to apply with latest implementation as below {@link #doGetRequest(String)} instead.
+     */
+    @Deprecated
     @Override
     public HashMap<?, ?> doGetRequest(final SDKClient sdkClient,
                                       final String requestURI) {
+
         return WebClient.builder()
                 .baseUrl(sdkClient.getSuperLiveHost())
                 .filters(SDKWebClientBuilder.exchangeRequestFilters())
@@ -260,6 +274,22 @@ public final class SDKClient extends ConfigurableProperties implements SDKWebCli
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
+    /**
+     * @param sdkClient          : sdkClient's instance
+     * @param uriBuilderFunction :fully customized uri (path variable and query param capabilities)
+     * @return HashMap<?, ?> content result content as Json :
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * @see SDKWebClientBuilder#buildHttpGetURI(String)
+     * @see SDKWebClientBuilder#buildHttpGetURI(Optional, Object)
+     * @see SDKWebClientBuilder#buildHttpGetURI(Optional, Optional)
+     * @deprecated As of superlive-sdk-java 1.0-SNAPSHOT
+     * because of using SDKClient instance separately,
+     * It's recommended to apply with latest implementation as below {@link #doGetRequest(String, Function)} instead.
+     */
+    @Deprecated
     @Override
     public HashMap<?, ?> doGetRequest(final SDKClient sdkClient,
                                       final Function<UriBuilder, URI> uriBuilderFunction) {
@@ -299,6 +329,7 @@ public final class SDKClient extends ConfigurableProperties implements SDKWebCli
     @Override
     public HashMap<?, ?> doGetRequest(final String requestURI,
                                       final Function<UriBuilder, URI> uriBuilderFunction) {
+
         return SDKWebClientBuilder.buildAPIPathForHttpGet(Optional.ofNullable(requestURI), Optional.of(uriBuilderFunction), this.getAPIsPaths(), superLiveHost).headers(httpHeaders -> {
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                     httpHeaders.add(this.getAccessAuthorizationKey(), this.getAccessAuthorization());
@@ -323,11 +354,25 @@ public final class SDKClient extends ConfigurableProperties implements SDKWebCli
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
+    /**
+     * @param sdkClient      : sdkClient's instance
+     * @param uri            : the uri appending to the APi's uri
+     * @param requestDataMap : the request body represented as HashMap to post
+     * @return HashMap<?, ?> content result content as Json :
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * @deprecated As of superlive-sdk-java 1.0-SNAPSHOT
+     * because of using SDKClient instance separately,
+     * It's recommended to apply with latest implementation as below {@link #doPostRequest(String, Map)} instead.
+     */
+    @Deprecated
     @Override
     @SneakyThrows
     public HashMap<?, ?> doPostRequest(final SDKClient sdkClient,
                                        final String uri,
-                                       final Map requestDataMap) {
+                                       final Map<?, ?> requestDataMap) {
 
         return WebClient.builder()
                 .baseUrl(sdkClient.getSuperLiveHost())
@@ -349,7 +394,7 @@ public final class SDKClient extends ConfigurableProperties implements SDKWebCli
 
     @Override
     public HashMap<?, ?> doPostRequest(final String requestURI,
-                                       final Map requestDataMap) {
+                                       final Map<?, ?> requestDataMap) {
 
         return SDKWebClientBuilder.buildAPIPathForHttpPost(requestURI, this.getAPIsPaths(), superLiveHost)
                 .headers(httpHeaders -> {
@@ -364,11 +409,26 @@ public final class SDKClient extends ConfigurableProperties implements SDKWebCli
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
+    /**
+     * @param sdkClient      : sdkClient's instance
+     * @param requestURI     : the uri appending to the APi's uri
+     * @param id             : the <strong>id</strong> value to update through this uri (.../{id})
+     * @param requestDataMap : request body in the form of HasMap<String, Object>
+     * @return HashMap<?, ?> content result content as Json :
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * @deprecated As of superlive-sdk-java 1.0-SNAPSHOT
+     * because of using SDKClient instance separately,
+     * It's recommended to apply with latest implementation as below {@link #doDeleteRequest(String, String)} instead.
+     */
+    @Deprecated
     @Override
     public HashMap<?, ?> doPutRequest(final SDKClient sdkClient,
                                       final String requestURI,
                                       final String id,
-                                      final Map requestDataMap) {
+                                      final Map<?, ?> requestDataMap) {
 
         return WebClient.builder()
                 .baseUrl(sdkClient.getSuperLiveHost())
@@ -394,7 +454,7 @@ public final class SDKClient extends ConfigurableProperties implements SDKWebCli
     @Override
     public HashMap<?, ?> doPutRequest(final String requestURI,
                                       final String id,
-                                      final Map requestDataMap) {
+                                      final Map<?, ?> requestDataMap) {
 
         return SDKWebClientBuilder.buildAPIPathForHttpPut(requestURI, id, getAPIsPaths(), superLiveHost)
                 .headers(httpHeaders -> {
@@ -409,6 +469,19 @@ public final class SDKClient extends ConfigurableProperties implements SDKWebCli
                 .block(Duration.ofSeconds(Long.parseLong(getDefaultFailsafeDuration())));
     }
 
+    /**
+     * @param sdkClient  :
+     * @param requestURI :
+     * @return HashMap<?, ?> content result content as Json :
+     * <br/>{
+     * "statusCode": xxx,
+     * "data": {...}
+     * }
+     * @deprecated As of superlive-sdk-java 1.0-SNAPSHOT
+     * because of using SDKClient instance separately,
+     * It's recommended to apply with latest implementation as below {@link #doDeleteRequest(String, String)} instead.
+     */
+    @Deprecated
     @Override
     public HashMap<?, ?> doDeleteRequest(final SDKClient sdkClient,
                                          final String id,

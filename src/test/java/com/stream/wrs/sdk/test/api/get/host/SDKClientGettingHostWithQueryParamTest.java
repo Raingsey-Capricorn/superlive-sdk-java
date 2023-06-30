@@ -121,15 +121,15 @@ class SDKClientGettingHostWithQueryParamTest extends CommonTestConfig {
                 .merchantHostId("648a77d088c133b4c4b96f8a")
                 .accessAuthorization("dqkoimeT_qNak4E9Fl6DfKY_")
                 .buildApiHost()
-                .doGetRequest("/",
-                        SDKWebClientBuilder.buildHttpGetURI(
-                                Optional.of("/"),
-                                new HashMap() {{
+                .doGetRequest(ConfigurableProperties.Host.getIndex(),
+                        SDKWebClientBuilder.buildHttpGetURI(Optional.empty(),
+                                Optional.of(new HashMap() {{
                                     put("page", "1");
-                                    put("limit", "5");
+                                    put("limit", "1");
                                     put("search", "");
-                                }}
-                        ));
+                                }})
+                        )
+                );
 
         Assertions.assertTrue(
                 !Objects.requireNonNull(version3_result).isEmpty()
