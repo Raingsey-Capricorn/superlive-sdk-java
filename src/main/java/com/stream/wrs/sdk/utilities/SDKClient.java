@@ -187,8 +187,11 @@ public final class SDKClient extends ConfigurableProperties implements SDKWebCli
     }
 
     /**
-     * @param accessAuthorization
-     * @return
+     * Customizable authorization value when using this SDKClient, can be found from merchant's management portal
+     * <a href="http://merch.sp.tv/dashboard?#/credentials">Credentials Explorers</a>
+     *
+     * @param accessAuthorization : authorisation value
+     * @return SDKClient with customized access authorization
      */
     public SDKClient accessAuthorization(final String accessAuthorization) {
         this.accessAuthorization = accessAuthorization;
@@ -196,8 +199,9 @@ public final class SDKClient extends ConfigurableProperties implements SDKWebCli
     }
 
     /**
-     * @param accessAuthorizationKey
-     * @return
+     * @param accessAuthorizationKey : the key of which can be found from the swagger API here
+     *                               <br/><a href="http://merch.sp.tv/api/server-sdk-docs">Merchant Server SDK API Documents</a>
+     * @return SDKClient with customized access authorization key
      */
     public SDKClient accessAuthorizationKey(final String accessAuthorizationKey) {
         this.accessAuthorizationKey = accessAuthorizationKey;
