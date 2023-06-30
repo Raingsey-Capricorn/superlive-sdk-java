@@ -19,6 +19,7 @@ public interface SDKWebClientAction {
     /**
      * This method is strickly
      * used with SDKClient.builder()
+     * This methods support two type of URI, Fully Qualified Domain Name address (FQDN), or after <em>buildXxxAPI()</em> with URI's path as example below
      * <br/><br/><strong>Usage</strong>:
      * <code>
      * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doGetRequest(String requestURI)
@@ -39,6 +40,7 @@ public interface SDKWebClientAction {
     /**
      * This method is strickly
      * used with SDKClient.builder()
+     * This methods support two type of URI, Fully Qualified Domain Name address (FQDN), or after <em>buildXxxAPI()</em> with URI's path as example below
      * <br/><br/><strong>Usage</strong>:
      * <code>
      * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doGetRequest(final String requestURI, final Function<UriBuilder, URI> uriBuilderFunction)
@@ -61,6 +63,7 @@ public interface SDKWebClientAction {
     /**
      * This method is strickly
      * used with SDKClient.builder()
+     * This methods support two type of URI, Fully Qualified Domain Name address (FQDN), or after <em>buildXxxAPI()</em> with URI's path as example below
      * <br/><br/><strong>Usage</strong>:
      * <code>
      * <br/>- SDKClient<br/>.builder()<br/>.buildXXXXXAPI()...<br/>.doGetRequest(final String requestURI, final Function<UriBuilder, URI> uriBuilderFunction)
@@ -105,6 +108,7 @@ public interface SDKWebClientAction {
     /**
      * This method is strickly
      * used with SDKClient.builder()
+     * This methods support two type of URI, Fully Qualified Domain Name address (FQDN), or after <em>buildXxxAPI()</em> with URI's path as example below
      * <br/><br/><strong>Usage</strong>:
      * <code>
      * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doPostRequest(String requestURI)
@@ -139,6 +143,7 @@ public interface SDKWebClientAction {
     /**
      * This method is strickly
      * used with SDKClient.builder()
+     * This methods support two type of URI, Fully Qualified Domain Name address (FQDN), or after <em>buildXxxAPI()</em> with URI's path as example below
      * <br/><br/><strong>Usage</strong>:
      * <code>
      * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doPutRequest(final String requestURI, final String id, final HashMap requestDataMap)
@@ -172,6 +177,7 @@ public interface SDKWebClientAction {
     /**
      * This method is strickly
      * used with SDKClient.builder()
+     * This methods support two type of URI, Fully Qualified Domain Name address (FQDN), or after <em>buildXxxAPI()</em> with URI's path as example below
      * <br/><br/><strong>Usage</strong>:
      * <code>
      * <br/>- SDKClient<br/>.builder()...<br/>.build()<br/>.doDeleteRequest(final String requestURI, final String id)
